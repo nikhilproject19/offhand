@@ -114,6 +114,8 @@ h3{font-size:1.05rem;font-weight:600;line-height:1.3}
 /* step progress */
 .stephead{display:flex;flex-direction:column;gap:12px}
 .steps{display:flex;gap:6px}
+.steprow{display:flex;align-items:center;gap:2px;min-height:20px}
+.stepback{width:40px;height:40px;margin:-10px 0 -10px -12px}
 .steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}
 .steps i.on{background:var(--ink)}
 .app[data-tone="night"] .steps i{background:var(--night-line)}
@@ -712,6 +714,7 @@ const ICONS = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/>',
   heart:'<path d="M12 20s-7.5-4.5-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.5-7.5 10-7.5 10z"/>',
   x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  back:'<path d="M14.5 5.5 8 12l6.5 6.5"/>',
   cards:'<rect x="7" y="3.5" width="12" height="15" rx="2.5"/><path d="M4.5 7v10.5a3 3 0 0 0 3 3h8"/>',
   chat:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',
   user:'<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4.1-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>',
@@ -997,7 +1000,9 @@ function answerCard(a, extraHtml = ''){
   return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}</div>${tw}${foot}</article>`;
 }
 const avatar = (p, cls = '') => `<span class="av ${cls}"><img src="${avatarSrc(p)}" alt=""></span>`;
-const stepHead = n => `<div class="stephead"><div class="steps">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div><p class="eyebrow">Step ${n} of 3</p></div>`;
+// earlier onboarding steps stay reachable, so you can fix a typo; the photo stays locked once taken
+const stepHead = n => `<div class="stephead"><div class="steps">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div><div class="steprow">${
+  n > 1 ? `<button class="iconbtn stepback" data-act="stepBack" data-step="${n - 1}" data-back aria-label="Back to step ${n - 1}">${I('back', 20)}</button>` : ''}<p class="eyebrow">Step ${n} of 3</p></div></div>`;
 const focusFact = (stayed, total, here) => `<div class="facts">${here ? '<span class="fact"><i class="here"></i>Here now</span>' : ''}<span class="fact">${I('focus', 16)}${total ? `Stayed till the end in ${stayed} of ${total} live conversations` : 'No live conversations yet'}</span></div>`;
 function tabbar(){
   const waiting = S.matches.filter(id => !S.blocked[id] && !talkRec(id).n).length;
@@ -1015,7 +1020,7 @@ function sheetHtml(){
         <button class="opt" data-act="nowPhoto"><span class="oi">${I('camera')}</span><span><b>Send a right-now photo</b><small>One shot, date-stamped, sent instantly</small></span></button>
         ${canVoice ? `<button class="opt" data-act="nowVoice"><span class="oi">${I('mic')}</span><span><b>Send a 10-second voice note</b><small>One take, sends when you stop</small></span></button>` : ''}
       </div>
-      <button class="btn ghost" data-act="closeSheet">Cancel</button>
+      <button class="btn ghost" data-act="closeSheet" data-back>Cancel</button>
     </div>`;
   if (sheet.type === 'voice') return `<div class="scrim"></div>
     <div class="sheet" role="dialog" aria-label="Recording a voice note">
@@ -1060,7 +1065,7 @@ function sheetHtml(){
       ${reasons.map(r => `<button class="opt" data-act="doReport"><span class="oi">${I('flag', 20)}</span><span><b>${esc(r)}</b></span></button>`).join('')}
       <button class="opt" data-act="doBlock"><span class="oi">${I('x', 20)}</span><span><b>Just block, no report</b></span></button>
     </div>
-    <button class="btn ghost" data-act="closeSheet">Cancel</button>
+    <button class="btn ghost" data-act="closeSheet" data-back>Cancel</button>
   </div>`;
 }
 
@@ -1113,7 +1118,7 @@ const VIEWS = {
         </div></fieldset>
       </div>
       <p class="err" id="ferr" role="alert"></p>
-      <button class="btn primary push" data-act="saveBasics">Next: live photo</button>
+      <button class="btn primary push" data-act="saveBasics">${m.photoDone ? 'Save and continue' : 'Next: live photo'}</button>
     </section>`;
   },
 
@@ -1121,7 +1126,7 @@ const VIEWS = {
     const first = P.from === 'onboard', live = P.from === 'live';
     const them = live && T ? esc(T.p.name) : '';
     const top = first ? stepHead(2)
-      : `<div class="topline"><button class="iconbtn" data-act="${live ? 'photoBack' : 'go'}" data-to="me" aria-label="Cancel">${I('x')}</button><span class="eyebrow">${live ? 'Your turn · right now' : 'New live photo'}</span><span style="width:44px"></span></div>`;
+      : `<div class="topline"><button class="iconbtn" data-act="${live ? 'photoBack' : 'go'}" data-to="me" data-back aria-label="Cancel">${I('x')}</button><span class="eyebrow">${live ? 'Your turn · right now' : 'New live photo'}</span><span style="width:44px"></span></div>`;
     if (P.shot) return `<section class="screen">
       ${top}
       <div class="intro"><h2>${first ? "That's your photo" : "That's your new photo"}</h2><p class="lede">It's locked in, with the date and time burned into it.</p></div>
@@ -1953,9 +1958,14 @@ const ACT = {
       : !city ? 'Add your city.'
       : !iam || !show ? 'Choose an option for "I am" and "Show me".' : '';
     if (err) { $('#ferr').textContent = err; return; }
-    S.me = { name, age, city, iam, show, answers:[], photo:'', photoAt:0, photoDone:false, plan:null, ready:false };
+    // coming back to change these keeps everything else, the photo included, so it's never a way to retake it
+    S.me = Object.assign({ answers:[], photo:'', photoAt:0, photoDone:false, plan:null, ready:false }, S.me || {}, { name, age, city, iam, show });
     save();
-    P = { from:'onboard', shot:'', error:false, stream:null };
+    resume();
+  },
+  stepBack(t){
+    if (t.dataset.step === '1') { stopCam(); P = null; go('basics'); return; }
+    P = { from:'onboard', shot:S.me.photo || '', error:false, stream:null };
     go('photo');
   },
 
