@@ -15,7 +15,7 @@
    REC red for anything live, and an amber seven-segment date stamp burned into every photo.
    Layout: one phone-width column; on a computer it stands in the middle of a night backdrop. */
 :root{
-  --paper:#F4F2F7; --card:#FFFFFF; --ink:#1C1830; --ink-2:#4B4662; --muted:#7B758E; --line:#E4E0EB; --line-2:#CDC8DA;
+  --paper:#F4F2F7; --card:#FFFFFF; --ink:#1C1830; --ink-2:#4B4662; --muted:#6B6580; --line:#E4E0EB; --line-2:#CDC8DA;
   --rec:#E5383B; --rec-soft:#FDE7E7; --stamp:#FF9F2E; --warn:#93560B; --warn-soft:#FFF1DC; --here:#1FA463;
   --night:#17132C; --night-2:#231E3F; --night-3:#2F2952; --night-line:#3B3462; --on-night:#F6F4FB; --on-night-2:#B8B2CD;
   --backdrop:#0E0B1E;
@@ -129,14 +129,16 @@ h3{font-size:1.05rem;font-weight:600;line-height:1.3}
 .app[data-tone="night"] .rules span{color:var(--on-night-2)}
 
 /* welcome */
-.hero-art{position:relative;height:300px}
-.hero-art .shot{position:absolute;left:2%;top:4px;width:56%;margin:0;border-radius:16px;overflow:hidden;transform:rotate(-5deg);box-shadow:0 0 0 6px #fff,0 24px 50px rgba(0,0,0,.5)}
+.hero-art{position:relative;height:clamp(240px,68vw,300px)}
+.hero-art .shot{position:absolute;right:2%;top:4px;width:56%;margin:0;border-radius:16px;overflow:hidden;transform:rotate(4deg);box-shadow:0 0 0 6px #fff,0 24px 50px rgba(0,0,0,.5);animation:settleR .7s cubic-bezier(.2,.7,.2,1) both}
 .hero-art .shot img{aspect-ratio:4/5;object-fit:cover;width:100%}
-.hero-art .bubble{position:absolute;right:0;bottom:6px;width:66%;transform:rotate(3deg);background:#fff;color:#1C1830;border-radius:18px;padding:14px 16px;box-shadow:0 24px 50px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
-.bubble .bq{font-size:.78rem;color:#7B758E;line-height:1.3}
+.hero-art .bubble{position:absolute;left:0;bottom:6px;width:66%;transform:rotate(-3deg);animation:settleL .7s .12s cubic-bezier(.2,.7,.2,1) both;background:#fff;color:#1C1830;border-radius:18px;padding:14px 16px;box-shadow:0 24px 50px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
+.bubble .bq{font-size:.78rem;color:#6B6580;line-height:1.3}
 .bubble .ba{font-size:.98rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .bubble .chip{background:#F4F2F7;color:#4B4662}
-.hero-art .rectag{position:absolute;right:6%;top:14px;display:inline-flex;align-items:center;gap:7px;font:700 .72rem/1 var(--mono);letter-spacing:.14em;color:var(--on-night);background:rgba(255,255,255,.08);padding:8px 11px;border-radius:999px}
+@keyframes settleR{from{opacity:0;transform:rotate(11deg) translateY(16px)}}
+@keyframes settleL{from{opacity:0;transform:rotate(-9deg) translateY(26px)}}
+.hero-art .rectag{position:absolute;left:2%;top:20px;display:inline-flex;align-items:center;gap:7px;font:700 .72rem/1 var(--mono);letter-spacing:.14em;color:var(--on-night);background:rgba(255,255,255,.08);padding:8px 11px;border-radius:999px}
 
 /* forms */
 .form{display:flex;flex-direction:column;gap:18px}
@@ -154,7 +156,9 @@ fieldset.field{border:0;margin:0;padding:0}
 .seg input:focus-visible+span,.modes input:focus-visible+.mc{outline:2px solid var(--rec);outline-offset:2px}
 .err{color:var(--rec);font-weight:500;min-height:1.4em;font-size:.92rem}
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.modes .mc{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);height:100%}
+.modes .mc{position:relative;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);height:100%}
+.modes .mc::after{content:"";position:absolute;top:14px;right:14px;width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--line-2);transition:box-shadow .15s ease}
+.modes input:checked+.mc::after{box-shadow:inset 0 0 0 5.5px var(--ink)}
 .modes .mc .ic{margin-bottom:4px}
 .modes input:checked+.mc{box-shadow:inset 0 0 0 2px var(--ink)}
 .modes .mc b{font-weight:600}
@@ -179,7 +183,7 @@ fieldset.field{border:0;margin:0;padding:0}
 .portrait::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 46% at 0% 100%,rgba(10,8,22,.82),rgba(10,8,22,.35) 55%,transparent 100%);pointer-events:none}
 .portrait figcaption{position:absolute;left:20px;bottom:18px;z-index:1;color:#fff;display:flex;flex-direction:column;gap:3px}
 .portrait figcaption b{font:800 2.2rem/1 var(--display);font-stretch:78%}
-.portrait figcaption span{font-size:.92rem;color:rgba(255,255,255,.82)}
+.portrait figcaption span{font-size:.92rem;color:rgba(255,255,255,.82);max-width:52%}
 .nophoto{aspect-ratio:4/5;border-radius:24px;border:1.5px dashed var(--line-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;text-align:center;color:var(--muted)}
 .nophoto b{display:block;color:var(--ink);margin-bottom:4px}
 .who{display:flex;flex-direction:column;gap:2px}
@@ -200,13 +204,17 @@ fieldset.field{border:0;margin:0;padding:0}
 .chip.tc{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.72rem}
 .chip.warn{background:var(--warn-soft);color:var(--warn)}
 .chip.solid{background:var(--card);box-shadow:var(--shadow)}
-.replay{appearance:none;border:0;background:transparent;color:var(--ink-2);font:500 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;cursor:pointer;margin-left:auto;box-shadow:inset 0 0 0 1.5px var(--line)}
-.replay .ic{fill:currentColor;stroke:none}
-.replay:hover:not(:disabled){box-shadow:inset 0 0 0 1.5px var(--ink-2)}
+.afoot{display:flex;align-items:center;gap:10px;margin-top:2px;padding-top:12px;border-top:1px solid var(--line)}
+.replay{appearance:none;border:0;background:transparent;color:var(--ink);font:600 .86rem/1.2 var(--body);display:inline-flex;align-items:center;gap:9px;padding:0;min-height:40px;cursor:pointer;text-align:left}
+.replay .pb{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--paper);flex:none;transition:background-color .15s ease}
+.replay .ic{fill:currentColor;stroke:none;margin-left:2px}
+.replay small{color:var(--muted);font-weight:500;font-size:.8rem;margin-left:-4px}
+.replay:hover:not(:disabled) .pb{background:var(--line)}
 .replay:disabled{opacity:.55;cursor:default}
 .twist{margin-top:4px;padding-top:14px;border-top:1px dashed var(--line-2);display:flex;flex-direction:column;gap:8px}
 .twist .atext{font-size:1.05rem}
-.likebtn{align-self:flex-end;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--rec-soft);color:var(--rec);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;margin-top:2px;transition:background-color .15s ease,color .15s ease}
+.likebtn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--rec-soft);color:var(--rec);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;transition:background-color .15s ease,color .15s ease,transform .12s ease}
+.likebtn:active{transform:scale(.94)}
 .likebtn .ic,.heart .ic{fill:currentColor;stroke:none}
 .likebtn:hover{background:var(--rec);color:#fff}
 .deckbar{display:flex;gap:10px;align-items:center}
@@ -217,7 +225,7 @@ fieldset.field{border:0;margin:0;padding:0}
 .timecode{font:800 3.4rem/1 var(--display);font-stretch:72%;font-variant-numeric:tabular-nums;color:var(--on-night)}
 .timecode.low{color:var(--rec)}
 .bar{height:4px;border-radius:2px;background:var(--night-line);overflow:hidden}
-.bar i{display:block;height:100%;width:100%;background:var(--on-night);transform-origin:left}
+.bar i{display:block;height:100%;width:100%;background:var(--on-night);transform-origin:left;transition:transform .1s linear}
 .bar.low i{background:var(--rec)}
 .qtext{font-size:2.15rem;line-height:1.03}
 .answerbox{background:var(--night-2);color:var(--on-night);border:0;border-radius:var(--r);padding:16px 18px;min-height:170px;width:100%;resize:none;font-size:1.15rem;line-height:1.45}
@@ -238,13 +246,19 @@ fieldset.field{border:0;margin:0;padding:0}
 .recbtn:active{transform:scale(.95)}
 
 /* match */
-.pair{position:relative;height:232px}
-.pair figure{position:absolute;top:0;width:46%;aspect-ratio:4/5;margin:0;border-radius:16px;overflow:hidden;background:var(--night-2);box-shadow:0 0 0 5px #fff,0 24px 50px rgba(0,0,0,.5);display:grid;place-items:center}
+.pair{position:relative;height:auto;aspect-ratio:3/2}
+.pair figure{position:absolute;top:0;width:46%;aspect-ratio:4/5;margin:0;border-radius:16px;overflow:hidden;background:var(--night-2);box-shadow:0 0 0 6px #fff,0 24px 50px rgba(0,0,0,.5);display:grid;place-items:center}
 .pair figure img{width:100%;height:100%;object-fit:cover}
-.pair .p1{left:6%;top:12px;transform:rotate(-6deg)}
-.pair .p2{right:6%;transform:rotate(5deg)}
+.pair .p1{left:4%;top:12px;transform:rotate(-6deg)}
+.pair .p2{right:4%;transform:rotate(5deg)}
 .pair .initial{font:800 4.5rem/1 var(--display);font-stretch:78%;color:var(--on-night-2)}
 .heart{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:var(--rec);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--night),0 12px 30px rgba(229,56,59,.5)}
+.pair .p1{animation:inL .6s cubic-bezier(.2,.7,.2,1) both}
+.pair .p2{animation:inR .6s .06s cubic-bezier(.2,.7,.2,1) both}
+.pair .heart{animation:pop .5s .45s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes inL{from{opacity:0;transform:translateX(-40px) rotate(-16deg)}}
+@keyframes inR{from{opacity:0;transform:translateX(40px) rotate(15deg)}}
+@keyframes pop{from{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
 .words{display:flex;flex-direction:column;gap:10px}
 .word{background:var(--night-2);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:7px}
 .word p{color:var(--on-night);font-size:1rem;line-height:1.4;overflow-wrap:anywhere}
@@ -253,22 +267,26 @@ fieldset.field{border:0;margin:0;padding:0}
 .list{display:flex;flex-direction:column;gap:10px}
 .item{display:flex;align-items:center;gap:14px;padding:12px 14px;border:0;background:var(--card);color:var(--ink);border-radius:var(--r);box-shadow:var(--shadow);width:100%;text-align:left;cursor:pointer;min-width:0}
 .item.static{cursor:default}
-.item.off{opacity:.72}
+.item.off .av{opacity:.6}
 .item .txt{min-width:0;flex:1}
 .item .txt b{display:block;font-weight:600}
-.item .txt span{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .txt span{display:block;color:var(--muted);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .txt .here,.item .txt .away{display:inline-block;vertical-align:1px;margin-right:6px}
 .here,.away{width:8px;height:8px;border-radius:50%;flex:none}
 .here{background:var(--here);box-shadow:0 0 0 3px color-mix(in srgb,var(--here) 20%,transparent)}
-.away{background:var(--line-2)}
-.pill{flex:none;font-size:.84rem;font-weight:600;padding:9px 14px;border-radius:999px;background:var(--rec);color:#fff}
+.away{background:var(--muted)}
+.pill{flex:none;font-size:.82rem;font-weight:600;padding:8px 13px;border-radius:999px;background:var(--rec);color:#fff}
 .av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--night-2)}
 .av img{width:100%;height:100%;object-fit:cover}
+.av.on{box-shadow:0 0 0 2.5px var(--card),0 0 0 5px var(--here)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .empty{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:30px 20px;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
 .empty b{color:var(--ink)}
 .livecard{display:flex;align-items:center;gap:14px;padding:16px 16px 16px 18px;border-radius:var(--r);background:var(--card);box-shadow:var(--shadow)}
 .livecard .lc{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .livecard .lc b{font-weight:600}
-.livecard.on{background:var(--night);color:var(--on-night);box-shadow:0 14px 34px rgba(23,19,44,.28)}
+.livecard.on{background:var(--night);color:var(--on-night);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--rec) 50%,transparent),0 14px 34px rgba(23,19,44,.28)}
+@media (prefers-color-scheme: dark){.livecard.on{background:var(--night-3)}}
 .livecard.on .fine{color:var(--on-night-2)}
 .livecard .lr{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .livecard .timecode{font-size:1.9rem;color:inherit}
@@ -302,7 +320,9 @@ fieldset.field{border:0;margin:0;padding:0}
 .said .lbl{font:500 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
 .said img{width:150px;border-radius:12px}
 .turn{display:flex;flex-direction:column;gap:10px}
-.turnhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.turnhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.turn.idle .timecode{color:var(--on-night-2);opacity:.5}
+.turn.idle .bar i{background:var(--night-line)}
 .turnhead .timecode{font-size:2.3rem}
 .turnbox{min-height:104px}
 .turnrow{display:flex;gap:8px;align-items:center}
@@ -326,6 +346,32 @@ fieldset.field{border:0;margin:0;padding:0}
 .stats b{font:800 2.4rem/1 var(--display);font-stretch:72%;font-variant-numeric:tabular-nums;color:var(--on-night)}
 .stats span{color:var(--on-night-2);font-size:.85rem}
 
+.lede,.fine,.rules span,.atext{text-wrap:pretty}
+.answer .eyebrow.hot{color:var(--warn)}
+.app[data-tone="night"] .live,.livecard.on .live{color:#FF5256}
+.talkbar .live{white-space:nowrap}
+.btn.armed{background:var(--rec);color:#fff;box-shadow:none}
+.in{animation:msgin .35s cubic-bezier(.2,.7,.2,1) both}
+@keyframes msgin{from{opacity:0;transform:translateY(12px)}}
+.endhead{display:flex;align-items:center;gap:12px}
+/* phone keyboard up: pin the live screen to what's still visible, so their message and your reply stay on screen together */
+.app.kb .screen.fit{position:fixed;top:var(--vvtop,0px);left:0;right:0;margin:0 auto;width:100%;max-width:440px;height:var(--vvh,100dvh);min-height:0;overflow:hidden;gap:10px;padding-top:12px;padding-bottom:10px;z-index:4;background:var(--night);animation:none}
+.app.kb .talkbar{min-height:40px}
+.app.kb .talkbar .av{width:34px;height:34px}
+.app.kb .stage{min-height:0;justify-content:flex-start;overflow-y:auto;gap:10px}
+.app.kb .stage>:first-child{margin-top:auto}
+.app.kb .msgtext{font-size:1.4rem}
+.app.kb .msgtext.deal,.app.kb .qtext{font-size:1.55rem}
+.app.kb .turn{gap:8px}
+.app.kb .turnhead .timecode{font-size:1.7rem}
+.app.kb .turnbox{min-height:60px}
+.app.kb .turnrow .btn,.app.kb .nowbtn{min-height:48px;height:48px}
+.app.kb .qbar{min-height:40px}
+.app.kb .qbar .timecode{font-size:2.4rem}
+.app.kb .answerbox:not(.turnbox){min-height:72px;flex:1}
+.app.kb .screen.fit>.btn{min-height:48px}
+.app.kb .sheet{bottom:var(--kb,0px)}
+
 /* tab bar */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;display:flex;z-index:5;
   background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -1px 0 var(--line);
@@ -333,8 +379,8 @@ fieldset.field{border:0;margin:0;padding:0}
 .tabbar button{flex:1;appearance:none;border:0;background:none;padding:4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.74rem;font-weight:600;color:var(--muted);cursor:pointer;position:relative}
 .tabbar .tb{width:58px;height:32px;border-radius:16px;display:grid;place-items:center;transition:background-color .15s ease}
 .tabbar button[aria-current="page"]{color:var(--ink)}
-.tabbar button[aria-current="page"] .tb{background:var(--paper)}
-.tabbar .n{position:absolute;top:0;left:calc(50% + 10px);font:700 .62rem/1 var(--mono);background:var(--rec);color:#fff;border-radius:999px;padding:3px 6px}
+.tabbar button[aria-current="page"] .tb{background:var(--line)}
+.tabbar .n{position:absolute;top:0;left:calc(50% + 10px);font:700 .62rem/1 var(--mono);background:var(--rec);color:#fff;border-radius:999px;padding:3px 6px;box-shadow:0 0 0 2px var(--card)}
 .tabbar .ld{position:absolute;top:3px;left:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:var(--rec);box-shadow:0 0 0 2px var(--card);animation:blink 1.2s steps(2,start) infinite}
 
 /* sheet + toast */
@@ -936,7 +982,7 @@ function answerCard(a, extraHtml = ''){
   let replay = '';
   if (a.text && a.keys && a.keys.length) {
     const idx = REPLAYS.push({ keys:a.keys, text:a.text }) - 1, fixes = countFixes(a.keys);
-    replay = `<button class="replay" data-act="replay" data-r="${idx}" aria-label="Watch this answer being typed">${I('play', 12)}Watch it typed${fixes ? ` · ${fixes} fix${fixes > 1 ? 'es' : ''}` : ' · no fixes'}</button>`;
+    replay = `<button class="replay" data-act="replay" data-r="${idx}" aria-label="Watch this answer being typed"><span class="pb">${I('play', 11)}</span>Watch it typed<small>· ${fixes ? `${fixes} fix${fixes > 1 ? 'es' : ''}` : 'no fixes'}</small></button>`;
   }
   const body = a.audio ? `<audio controls src="${a.audio}"></audio>`
     : a.text ? `<p class="atext">${esc(a.text)}</p>`
@@ -947,11 +993,12 @@ function answerCard(a, extraHtml = ''){
       : t.text ? `<p class="atext">${esc(t.text)}</p>`
       : `<p class="atext none">${emptyText(t, a.cut)}</p>`
     }<div class="meta"><span class="chip tc">${fmtClock(t.secs)} / ${fmtClock(t.limit)}</span>${t.timedOut ? '<span class="chip">Clock ran out</span>' : ''}</div></div>` : '';
-  return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}${replay}</div>${tw}${extraHtml}</article>`;
+  const foot = replay || extraHtml ? `<div class="afoot">${replay}${extraHtml}</div>` : '';
+  return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}</div>${tw}${foot}</article>`;
 }
-const avatar = p => `<span class="av"><img src="${avatarSrc(p)}" alt=""></span>`;
+const avatar = (p, cls = '') => `<span class="av ${cls}"><img src="${avatarSrc(p)}" alt=""></span>`;
 const stepHead = n => `<div class="stephead"><div class="steps">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div><p class="eyebrow">Step ${n} of 3</p></div>`;
-const focusFact = (stayed, total) => `<div class="facts"><span class="fact">${I('focus', 16)}${total ? `Stayed till the end in ${stayed} of ${total} live conversations` : 'No live conversations yet'}</span></div>`;
+const focusFact = (stayed, total, here) => `<div class="facts">${here ? '<span class="fact"><i class="here"></i>Here now</span>' : ''}<span class="fact">${I('focus', 16)}${total ? `Stayed till the end in ${stayed} of ${total} live conversations` : 'No live conversations yet'}</span></div>`;
 function tabbar(){
   const waiting = S.matches.filter(id => !S.blocked[id] && !talkRec(id).n).length;
   const tab = (id, label, icon, extra = '') => `<button data-act="go" data-to="${id}" ${view === id ? 'aria-current="page"' : ''}><span class="tb">${I(icon)}</span>${label}${extra}</button>`;
@@ -1020,16 +1067,17 @@ function sheetHtml(){
 /* ---------- views ---------- */
 const VIEWS = {
   welcome(){
-    const maya = person('maya'), a = maya.answers[0];
+    // a short answer, so the bubble shows it whole: nothing on this page looks edited
+    const hero = person('sara'), a = hero.answers[0];
     return `<section class="screen">
       <header class="topline"><span class="wordmark"><i class="dot blink"></i>offhand</span><span class="eyebrow">Prototype</span></header>
       <div class="hero-art" aria-hidden="true">
-        <figure class="shot"><img src="${portraitSrc(maya)}" alt=""></figure>
-        <span class="rectag"><i class="dot blink"></i>REC 0:31</span>
+        <figure class="shot"><img src="${portraitSrc(hero)}" alt=""></figure>
+        <span class="rectag"><i class="dot blink"></i>REC ${fmtClock(a.secs)}</span>
         <div class="bubble">
           <p class="bq">${esc(a.q)}</p>
           <p class="ba">${esc(a.a)}</p>
-          <div class="meta"><span class="chip tc">0:31 / 0:45</span><span class="chip">Typed live</span></div>
+          <div class="meta"><span class="chip tc">${fmtClock(a.secs)} / 0:45</span><span class="chip">Typed live</span></div>
         </div>
       </div>
       <h1 class="mega">One take.<br>No edits.<br><em>Actually you.</em></h1>
@@ -1102,8 +1150,7 @@ const VIEWS = {
       <ul class="rules">
         <li><span class="ico">${I('eyeoff')}</span><div><b>You can't see them yet</b><span>Each question appears when you start its clock.</span></div></li>
         <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>When the clock stops, that's your answer. It can't be edited or removed.</span></div></li>
-        <li><span class="ico">${I('lock')}</span><div><b>No second tries</b><span>Pasting is off. Switching away marks your answer, and reloading locks it as it is.</span></div></li>
-        <li><span class="ico">${I('play')}</span><div><b>Typed for real</b><span>Others can watch how you typed it, pauses and corrections included.</span></div></li>
+        <li><span class="ico">${I('lock')}</span><div><b>No second tries</b><span>Pasting is off, switching away marks your answer, and reloading locks it. Others can watch how you typed it.</span></div></li>
         <li><span class="ico">${I('spark')}</span><div><b>Expect one twist</b><span>One of the three comes with a surprise follow-up on its own 15-second clock.</span></div></li>
       </ul>
       <fieldset class="field"><legend>How do you want to answer?</legend>
@@ -1128,7 +1175,7 @@ const VIEWS = {
       ${Q.ctx === 'onboard' ? '' : '<button class="btn ghost-night" data-act="qLater">Not now</button>'}
     </section>`;
     const tw = Q.part === 'twist';
-    if (Q.phase === 'live') return `<section class="screen">
+    if (Q.phase === 'live') return `<section class="screen fit">
       <div class="qbar"><span class="live"><i class="dot blink"></i>${tw ? 'Follow-up' : 'Live'}</span><span class="timecode" id="secs" aria-label="Time left">${fmtClock(curLimit())}</span></div>
       <div class="bar" id="barwrap"><i id="bar"></i></div>
       <p class="eyebrow ${tw ? 'hot' : ''}">${tw ? `${I('spark', 14)}Surprise follow-up` : esc(Q.label)}</p>
@@ -1160,7 +1207,7 @@ const VIEWS = {
     return `<section class="screen">${head(deck.length)}
       <figure class="portrait"><img src="${portraitSrc(p)}" alt="Example photo for ${esc(p.name)}"><span class="tag">Example profile</span>
         <figcaption><b>${esc(p.name)}, ${p.age}</b><span>${p.km} km away · ${esc(S.me.city)}</span></figcaption></figure>
-      ${focusFact(p.focus[0], p.focus[1])}
+      ${focusFact(p.focus[0], p.focus[1], p.here)}
       ${p.answers.map((a, i) => answerCard(norm(a, p.id + i), a.a ? `<button class="likebtn" data-act="like" data-id="${p.id}" data-i="${i}" aria-label="Like this answer">${I('heart', 18)}Like</button>` : '')).join('')}
       <div class="deckbar">
         <button class="btn secondary" data-act="pass" data-id="${p.id}">${I('x', 20)}Pass for good</button>
@@ -1199,7 +1246,7 @@ const VIEWS = {
       if (!p.here) return `<div class="item static off">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span><i class="away"></i>Away · usually here ${esc(p.usual)}</span></span></div>`;
       const last = talkRec(p.id).last;
       const sub = last ? `Talked ${fmtClock(last.secs)}, ${ago(last.at)}` : "Haven't talked yet";
-      return `<button class="item" data-act="talk" data-id="${p.id}">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span><i class="here"></i>Here now · ${sub}</span></span><span class="pill">Talk now</span></button>`;
+      return `<button class="item" data-act="talk" data-id="${p.id}">${avatar(p, 'on')}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span><span class="sr">Here now. </span>${sub}</span></span><span class="pill">Talk now</span></button>`;
     };
     const left = Math.max(0, Math.round((liveUntil - Date.now()) / 1000));
     const card = !ms.length ? '' : isLive()
@@ -1208,7 +1255,7 @@ const VIEWS = {
       : `<div class="livecard"><div class="lc"><b>Be here for ${LIVE_MINS} minutes</b><p class="fine">Go live and matches who are here can knock on you. Leaving the app takes you offline.</p></div>
           <button class="btn rec small fit" data-act="goLive">Go live</button></div>`;
     return `<section class="screen">
-      <div class="intro"><h2>Matches</h2><p class="fine">Conversations are live and one at a time. Messages show once, and before you talk again you're both asked what you remember.</p></div>
+      <div class="intro"><header class="topline"><h2>Matches</h2></header><p class="fine">Conversations are live and one at a time. Messages show once, and before you talk again you're both asked what you remember.</p></div>
       ${card}
       ${ms.length ? `<div class="list">${ms.map(row).join('')}</div>`
         : `<div class="empty">${I('chat', 30)}<b>No matches yet.</b><span>Like an answer in Discover. If they like you back, they appear here.</span></div>`}
@@ -1222,7 +1269,7 @@ const VIEWS = {
     const bar = `<div class="talkbar">${avatar(p)}
       <div class="who2"><b>${esc(p.name)}</b><span class="live"><i class="dot blink"></i>Live · <span id="elapsed">${fmtClock(Math.floor((Date.now() - T.start) / 1000))}</span></span></div>
       <button class="iconbtn" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('flag', 20)}</button>
-      <button class="btn ghost-night small fit" data-act="talkEnd">${T.endArmed ? 'Tap again to end' : 'End'}</button>
+      <button class="btn ghost-night small fit ${T.endArmed ? 'armed' : ''}" data-act="talkEnd">${T.endArmed ? 'End now' : 'End'}</button>
     </div>`;
     if (T.phase === 'knock') return `<section class="screen talk">${bar}
       <div class="knock"><span class="ring"><img src="${avatarSrc(p)}" alt=""></span><h2>Knocking…</h2>
@@ -1254,7 +1301,7 @@ const VIEWS = {
         <button class="btn rec" data-act="recallGo">Start talking</button>
       </section>`;
     }
-    return `<section class="screen talk">${bar}<div class="stage" id="stage">${stageHtml()}</div>${turnHtml()}</section>`;
+    return `<section class="screen talk fit">${bar}<div class="stage" id="stage">${stageHtml()}</div>${turnHtml()}</section>`;
   },
 
   me(){
@@ -1266,6 +1313,7 @@ const VIEWS = {
         ? `<figure class="portrait"><img src="${m.photo}" alt="Your live photo, date-stamped"><figcaption><b>${esc(m.name)}, ${m.age}</b><span>${esc(m.city)}</span></figcaption></figure>`
         : `<div class="nophoto">${I('camera', 34)}<p><b>No live photo yet</b>Others see your profile marked as having no live photo.</p></div><div class="who"><h2>${esc(m.name)}, ${m.age}</h2><p>${esc(m.city)}</p></div>`}
       ${focusFact(S.focus.stayed, S.focus.total)}
+      ${m.answers.length ? `<p class="eyebrow">Your answers · ${m.answers.length}</p>` : ''}
       ${m.answers.map(a => answerCard(a)).join('')}
       <div class="opts">
         <button class="opt card" data-act="freshQ"><span class="oi">${I('shuffle')}</span><span><b>Answer a fresh question</b><small>Random, and hidden until its clock starts</small></span></button>
@@ -1278,21 +1326,23 @@ const VIEWS = {
 };
 
 function stageHtml(){
-  const p = T.p;
-  if (T.phase === 'opening') return `<div class="opening">
+  // each message slides in once, the first time it's drawn, not on every repaint
+  const p = T.p, fresh = o => o && !o.drawn ? (o.drawn = true, ' in') : '';
+  if (T.phase === 'opening') return `<div class="opening${fresh(T.openFx = T.openFx || {})}">
       <p class="eyebrow hot">${I('spark', 14)}Opening question · you both answer</p>
       <h2 class="qtext">${esc(T.q)}</h2>
       <p class="fine">${esc(p.name)}'s answer shows once you've sent yours.</p></div>`;
-  return (T.mine ? saidHtml(T.mine) : '') + (T.theirs
-    ? `<div class="theirs">${T.theirs.deal
+  const mineIn = fresh(T.mine);
+  return (T.mine ? saidHtml(T.mine, mineIn) : '') + (T.theirs
+    ? `<div class="theirs${fresh(T.theirs)}">${T.theirs.deal
         ? `<p class="eyebrow hot">${I('spark', 14)}${esc(p.name)} dealt you a question</p>`
         : `<p class="eyebrow">${esc(p.name)} · seen once, gone when you reply</p>`}<p class="msgtext ${T.theirs.deal ? 'deal' : ''}" id="theirs">${esc(T.theirs.shown)}</p></div>`
-    : `<div class="theirs"><p class="eyebrow">${esc(p.name)} is typing</p><span class="typing" aria-hidden="true"><i></i><i></i><i></i></span></div>`);
+    : `<div class="theirs${mineIn}"><p class="eyebrow">${esc(p.name)} is typing</p><span class="typing" aria-hidden="true"><i></i><i></i><i></i></span></div>`);
 }
 // The reply box stays the same element for the whole conversation, so typing and a phone's keyboard survive every turn.
 function turnHtml(){
   const mine = T.phase === 'opening' || T.phase === 'mine', name = esc(T.p.name);
-  return `<div class="turn">
+  return `<div class="turn ${mine ? '' : 'idle'}">
     <div class="turnhead"><span class="eyebrow" id="turnlabel">${mine ? 'Your turn' : `${name}'s turn · stay here`}</span><span class="timecode" id="turnclock">${fmtClock(TURN)}</span></div>
     <div class="bar" id="turnbar"><i id="turnfill"></i></div>
     <textarea class="answerbox turnbox" id="say" placeholder="Say it as it comes. Whatever you've typed sends itself at 0:00." autocomplete="off" maxlength="500" aria-label="Your message"></textarea>
@@ -1306,17 +1356,18 @@ function paintTalk(){
   stage.innerHTML = stageHtml();
   const mine = T.phase === 'opening' || T.phase === 'mine', name = T.p.name;
   $('#turnlabel').textContent = mine ? 'Your turn' : `${name}'s turn · stay here`;
+  $('.turn').classList.toggle('idle', !mine);
   const send = $('#sendbtn'); send.disabled = !mine; send.textContent = mine ? 'Send' : `${name}'s turn`;
   $('#nowbtn').hidden = T.phase !== 'mine';
-  const end = $('[data-act=talkEnd]'); if (end) end.textContent = T.endArmed ? 'Tap again to end' : 'End';
+  const end = $('[data-act=talkEnd]'); if (end) { end.textContent = T.endArmed ? 'End now' : 'End'; end.classList.toggle('armed', !!T.endArmed); }
   if (say.value !== (T.text || '')) say.value = T.text || '';
   if (mine) talkTick();
   else { const c = $('#turnclock'); c.textContent = fmtClock(TURN); c.classList.remove('low'); $('#turnfill').style.transform = ''; $('#turnbar').classList.remove('low'); }
 }
-function saidHtml(m){
-  if (m.kind === 'photo') return `<div class="said"><span class="lbl">You sent a right-now photo</span><img src="${m.src}" alt="Your right-now photo"></div>`;
-  if (m.kind === 'voice') return `<div class="said"><span class="lbl">You sent a 10-second voice note</span></div>`;
-  return `<div class="said"><span class="lbl">You said</span>${esc(m.text)}</div>`;
+function saidHtml(m, cls = ''){
+  if (m.kind === 'photo') return `<div class="said${cls}"><span class="lbl">You sent a right-now photo</span><img src="${m.src}" alt="Your right-now photo"></div>`;
+  if (m.kind === 'voice') return `<div class="said${cls}"><span class="lbl">You sent a 10-second voice note</span></div>`;
+  return `<div class="said${cls}"><span class="lbl">You said</span>${esc(m.text)}</div>`;
 }
 function endedHtml(){
   const name = T.p.name;
@@ -1327,7 +1378,7 @@ function endedHtml(){
     quiet: ['You went quiet, so it ended.', 'Your clock ran out with nothing said.']
   }[T.reason] || ['Conversation over.', ''];
   return `<section class="screen">
-    <p class="eyebrow">Conversation over</p>
+    <div class="endhead">${avatar(T.p)}<p class="eyebrow">Conversation over</p></div>
     <h1>${esc(head)}</h1>
     <p class="lede">${esc(line)}</p>
     <div class="stats"><div><b>${fmtClock(T.secs)}</b><span>talked</span></div><div><b>${T.msgs}</b><span>messages</span></div></div>
@@ -1871,6 +1922,24 @@ window.addEventListener('blur', () => {
 });
 window.addEventListener('focus', () => { if (T) clearTimeout(T.blurTimer); });
 
+/* ---------- phone keyboard ---------- */
+// With the keyboard up, pin a live screen to what's still visible, so what you're replying to stays in view.
+let fullH = window.innerHeight;
+function fitKeyboard(vv = window.visualViewport){
+  if (!vv) return;
+  fullH = Math.max(fullH, window.innerHeight);
+  const el = document.activeElement;
+  const open = vv.height < fullH * 0.78 && Math.abs((vv.scale || 1) - 1) < 0.05 && !!el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT');
+  const rs = document.documentElement.style;
+  rs.setProperty('--vvh', `${Math.round(vv.height)}px`);
+  rs.setProperty('--vvtop', `${Math.round(vv.offsetTop)}px`);
+  rs.setProperty('--kb', open ? `${Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop))}px` : '0px');
+  app.classList.toggle('kb', open);
+}
+if (window.visualViewport) ['resize', 'scroll'].forEach(e => window.visualViewport.addEventListener(e, () => fitKeyboard()));
+document.addEventListener('focusout', () => setTimeout(() => fitKeyboard(), 60));
+window.addEventListener('orientationchange', () => { fullH = 0; setTimeout(() => fitKeyboard(), 400); });
+
 /* ---------- actions ---------- */
 const ACT = {
   go(t){ go(t.dataset.to); },
@@ -1969,9 +2038,9 @@ const ACT = {
     if (!talking()) return;
     if (!T.endArmed) {
       // change only the button, so a half-typed message isn't disturbed
-      T.endArmed = true; t.textContent = 'Tap again to end';
+      T.endArmed = true; t.textContent = 'End now'; t.classList.add('armed');
       clearTimeout(T.disarm);
-      T.disarm = setTimeout(() => { if (talking() && T.endArmed) { T.endArmed = false; const b = $('[data-act=talkEnd]'); if (b) b.textContent = 'End'; } }, 3000);
+      T.disarm = setTimeout(() => { if (talking() && T.endArmed) { T.endArmed = false; const b = $('[data-act=talkEnd]'); if (b) { b.textContent = 'End'; b.classList.remove('armed'); } } }, 3000);
       return;
     }
     talkEnd('you');
