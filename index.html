@@ -16,7 +16,7 @@
    Layout: one phone-width column; on a computer it stands in the middle of a night backdrop. */
 :root{
   --paper:#F4F2F7; --card:#FFFFFF; --ink:#1C1830; --ink-2:#4B4662; --muted:#7B758E; --line:#E4E0EB; --line-2:#CDC8DA;
-  --rec:#E5383B; --rec-soft:#FDE7E7; --stamp:#FF9F2E; --warn:#93560B; --warn-soft:#FFF1DC;
+  --rec:#E5383B; --rec-soft:#FDE7E7; --stamp:#FF9F2E; --warn:#93560B; --warn-soft:#FFF1DC; --here:#1FA463;
   --night:#17132C; --night-2:#231E3F; --night-3:#2F2952; --night-line:#3B3462; --on-night:#F6F4FB; --on-night-2:#B8B2CD;
   --backdrop:#0E0B1E;
   --shadow:0 1px 2px rgba(28,24,48,.06),0 10px 28px rgba(28,24,48,.08);
@@ -28,7 +28,7 @@
 @media (prefers-color-scheme: dark){
   :root{
     --paper:#100D1E; --card:#1B172F; --ink:#F3F1F9; --ink-2:#CBC5DC; --muted:#9791AE; --line:#2A2544; --line-2:#3B355B;
-    --rec:#FF5256; --rec-soft:#3A1B26; --warn:#F2B75E; --warn-soft:#382A15;
+    --rec:#FF5256; --rec-soft:#3A1B26; --warn:#F2B75E; --warn-soft:#382A15; --here:#3DD68C;
     --night:#0C0A18; --night-2:#18142D; --night-3:#231E40; --night-line:#322C54;
     --backdrop:#06050D;
     --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
@@ -102,6 +102,8 @@ h3{font-size:1.05rem;font-weight:600;line-height:1.3}
 .btn.light{background:var(--on-night);color:#17132C}
 .btn.ghost-night{background:transparent;color:var(--on-night-2);box-shadow:inset 0 0 0 1.5px var(--night-line)}
 .btn.small{min-height:44px;font-size:.95rem;padding:0 18px}
+.btn.fit{width:auto}
+.btn .ic.fill{fill:currentColor;stroke:none}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .stack{display:flex;flex-direction:column;gap:10px}
 .row{display:flex;gap:10px}
@@ -182,18 +184,26 @@ fieldset.field{border:0;margin:0;padding:0}
 .nophoto b{display:block;color:var(--ink);margin-bottom:4px}
 .who{display:flex;flex-direction:column;gap:2px}
 .who p{color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:-6px}
+.fact{display:inline-flex;align-items:center;gap:8px;font-size:.88rem;line-height:1.3;color:var(--ink-2);background:var(--card);box-shadow:var(--shadow);padding:9px 14px;border-radius:999px}
+.fact .ic{color:var(--rec)}
 
 /* answers */
 .answer{background:var(--card);color:var(--ink);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .aq{color:var(--muted);font-size:.9rem;font-weight:500;line-height:1.35}
-.atext{font-size:1.16rem;line-height:1.42;overflow-wrap:anywhere}
+.atext{font-size:1.16rem;line-height:1.42;overflow-wrap:anywhere;white-space:pre-wrap}
 .atext.none{color:var(--muted);font-style:italic;font-size:1rem}
+.atext.typing-now::after{content:"";display:inline-block;width:2px;height:1.05em;background:var(--rec);margin-left:2px;vertical-align:-.15em;animation:blink 1s steps(2,start) infinite}
 .answer audio{width:100%;height:40px}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .chip{font-size:.74rem;font-weight:500;padding:5px 10px;border-radius:999px;background:var(--paper);color:var(--ink-2);white-space:nowrap}
 .chip.tc{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.72rem}
 .chip.warn{background:var(--warn-soft);color:var(--warn)}
 .chip.solid{background:var(--card);box-shadow:var(--shadow)}
+.replay{appearance:none;border:0;background:transparent;color:var(--ink-2);font:500 .68rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;cursor:pointer;margin-left:auto;box-shadow:inset 0 0 0 1.5px var(--line)}
+.replay .ic{fill:currentColor;stroke:none}
+.replay:hover:not(:disabled){box-shadow:inset 0 0 0 1.5px var(--ink-2)}
+.replay:disabled{opacity:.55;cursor:default}
 .twist{margin-top:4px;padding-top:14px;border-top:1px dashed var(--line-2);display:flex;flex-direction:column;gap:8px}
 .twist .atext{font-size:1.05rem}
 .likebtn{align-self:flex-end;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--rec-soft);color:var(--rec);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;margin-top:2px;transition:background-color .15s ease,color .15s ease}
@@ -226,29 +236,42 @@ fieldset.field{border:0;margin:0;padding:0}
 .recbtn{appearance:none;width:124px;height:124px;border-radius:50%;border:0;background:var(--rec);color:#fff;font:700 .82rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
   box-shadow:0 0 0 7px var(--night),0 0 0 9px rgba(255,255,255,.2),0 20px 50px rgba(229,56,59,.45);transition:transform .12s ease}
 .recbtn:active{transform:scale(.95)}
-.recbtn:disabled{opacity:.6;cursor:wait}
 
 /* match */
-.pair{position:relative;height:270px}
-.pair figure{position:absolute;top:0;width:50%;aspect-ratio:4/5;margin:0;border-radius:16px;overflow:hidden;background:var(--night-2);box-shadow:0 0 0 5px #fff,0 24px 50px rgba(0,0,0,.5);display:grid;place-items:center}
+.pair{position:relative;height:232px}
+.pair figure{position:absolute;top:0;width:46%;aspect-ratio:4/5;margin:0;border-radius:16px;overflow:hidden;background:var(--night-2);box-shadow:0 0 0 5px #fff,0 24px 50px rgba(0,0,0,.5);display:grid;place-items:center}
 .pair figure img{width:100%;height:100%;object-fit:cover}
-.pair .p1{left:4%;top:14px;transform:rotate(-6deg)}
-.pair .p2{right:4%;transform:rotate(5deg)}
+.pair .p1{left:6%;top:12px;transform:rotate(-6deg)}
+.pair .p2{right:6%;transform:rotate(5deg)}
 .pair .initial{font:800 4.5rem/1 var(--display);font-stretch:78%;color:var(--on-night-2)}
-.heart{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:var(--rec);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--night),0 12px 30px rgba(229,56,59,.5)}
+.heart{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:var(--rec);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--night),0 12px 30px rgba(229,56,59,.5)}
+.words{display:flex;flex-direction:column;gap:10px}
+.word{background:var(--night-2);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:7px}
+.word p{color:var(--on-night);font-size:1rem;line-height:1.4;overflow-wrap:anywhere}
 
 /* lists */
 .list{display:flex;flex-direction:column;gap:10px}
 .item{display:flex;align-items:center;gap:14px;padding:12px 14px;border:0;background:var(--card);color:var(--ink);border-radius:var(--r);box-shadow:var(--shadow);width:100%;text-align:left;cursor:pointer;min-width:0}
 .item.static{cursor:default}
+.item.off{opacity:.72}
 .item .txt{min-width:0;flex:1}
 .item .txt b{display:block;font-weight:600}
-.item .txt span{display:block;color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.item>.ic{color:var(--muted)}
+.item .txt span{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.here,.away{width:8px;height:8px;border-radius:50%;flex:none}
+.here{background:var(--here);box-shadow:0 0 0 3px color-mix(in srgb,var(--here) 20%,transparent)}
+.away{background:var(--line-2)}
+.pill{flex:none;font-size:.84rem;font-weight:600;padding:9px 14px;border-radius:999px;background:var(--rec);color:#fff}
 .av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--night-2)}
 .av img{width:100%;height:100%;object-fit:cover}
 .empty{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:30px 20px;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
 .empty b{color:var(--ink)}
+.livecard{display:flex;align-items:center;gap:14px;padding:16px 16px 16px 18px;border-radius:var(--r);background:var(--card);box-shadow:var(--shadow)}
+.livecard .lc{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.livecard .lc b{font-weight:600}
+.livecard.on{background:var(--night);color:var(--on-night);box-shadow:0 14px 34px rgba(23,19,44,.28)}
+.livecard.on .fine{color:var(--on-night-2)}
+.livecard .lr{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.livecard .timecode{font-size:1.9rem;color:inherit}
 .opts{display:flex;flex-direction:column;gap:8px}
 .opt{appearance:none;display:flex;align-items:center;gap:14px;padding:14px;border:0;border-radius:18px;background:var(--paper);text-align:left;cursor:pointer;color:var(--ink);width:100%}
 .opt:hover:not(:disabled){background:var(--line)}
@@ -260,6 +283,49 @@ fieldset.field{border:0;margin:0;padding:0}
 .opt small{display:block;color:var(--muted);font-size:.84rem;line-height:1.35}
 .opt:disabled{opacity:.55;cursor:not-allowed}
 
+/* live conversation */
+.screen.talk{gap:18px}
+.talkbar{display:flex;align-items:center;gap:12px;min-height:48px}
+.talkbar .av{width:44px;height:44px}
+.talkbar .who2{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.talkbar .who2 b{font-weight:600;line-height:1.1}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;min-height:180px}
+.opening{display:flex;flex-direction:column;gap:12px}
+.theirs{display:flex;flex-direction:column;gap:10px}
+.msgtext{font:700 1.75rem/1.16 var(--display);font-stretch:86%;color:var(--on-night);overflow-wrap:anywhere;min-height:1.16em}
+.msgtext.deal{font-size:2.05rem;font-stretch:78%;font-weight:800}
+.typing{display:inline-flex;gap:6px;align-items:center;height:30px}
+.typing i{width:9px;height:9px;border-radius:50%;background:var(--on-night-2);animation:typing 1.2s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-5px)}}
+.said{align-self:flex-end;max-width:86%;background:var(--night-2);color:var(--on-night-2);padding:12px 16px;border-radius:20px 20px 6px 20px;display:flex;flex-direction:column;gap:6px;overflow-wrap:anywhere}
+.said .lbl{font:500 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.said img{width:150px;border-radius:12px}
+.turn{display:flex;flex-direction:column;gap:10px}
+.turnhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.turnhead .timecode{font-size:2.3rem}
+.turnbox{min-height:104px}
+.turnrow{display:flex;gap:8px;align-items:center}
+.turnrow .btn{flex:1}
+.nowbtn{appearance:none;flex:none;height:56px;display:inline-flex;align-items:center;gap:8px;border:0;background:var(--night-2);color:var(--on-night);border-radius:999px;padding:0 18px;font-weight:600;cursor:pointer}
+.waiting{padding:16px;border-radius:var(--r);background:var(--night-2);text-align:center}
+.knock{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;margin:auto 0}
+.ring{width:132px;height:132px;border-radius:50%;padding:6px;background:var(--night-2);animation:ring 1.4s ease-out infinite;flex:none}
+.ring img{width:120px;height:120px;border-radius:50%;object-fit:cover}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(229,56,59,.55)}100%{box-shadow:0 0 0 28px rgba(229,56,59,0)}}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{appearance:none;border:0;text-align:left;padding:16px 18px;border-radius:18px;background:var(--night-2);color:var(--on-night);font:500 1rem/1.4 var(--body);cursor:pointer;box-shadow:inset 0 0 0 1.5px var(--night-line);transition:background-color .15s ease,box-shadow .15s ease}
+.choice:hover:not(:disabled){background:var(--night-3)}
+.choice:disabled{cursor:default}
+.choice.right{box-shadow:inset 0 0 0 2px var(--here);background:color-mix(in srgb,var(--here) 18%,var(--night-2))}
+.choice.wrong{box-shadow:inset 0 0 0 2px var(--rec);background:color-mix(in srgb,var(--rec) 16%,var(--night-2))}
+.recallhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.recallhead .timecode{font-size:2.2rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats div{background:var(--night-2);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.stats b{font:800 2.4rem/1 var(--display);font-stretch:72%;font-variant-numeric:tabular-nums;color:var(--on-night)}
+.stats span{color:var(--on-night-2);font-size:.85rem}
+
 /* tab bar */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;display:flex;z-index:5;
   background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -1px 0 var(--line);
@@ -269,32 +335,7 @@ fieldset.field{border:0;margin:0;padding:0}
 .tabbar button[aria-current="page"]{color:var(--ink)}
 .tabbar button[aria-current="page"] .tb{background:var(--paper)}
 .tabbar .n{position:absolute;top:0;left:calc(50% + 10px);font:700 .62rem/1 var(--mono);background:var(--rec);color:#fff;border-radius:999px;padding:3px 6px}
-
-/* chat */
-.screen.chat{padding:0;gap:0;height:100vh;height:100dvh;min-height:0}
-.chathead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:var(--card);box-shadow:0 1px 0 var(--line);position:relative;z-index:1}
-.chathead .av{width:42px;height:42px}
-.chathead .txt{flex:1;min-width:0}
-.chathead .txt b{display:block;font-weight:600;line-height:1.2}
-.chathead .txt span{display:block;color:var(--muted);font-size:.8rem}
-.msgs{flex:1;overflow-y:auto;padding:20px 14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
-.msg{max-width:80%;padding:10px 15px;border-radius:21px;overflow-wrap:anywhere;line-height:1.4}
-.msg.me{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:6px}
-.msg.them{align-self:flex-start;background:var(--card);color:var(--ink);box-shadow:var(--shadow);border-bottom-left-radius:6px}
-.msg.sys{align-self:center;max-width:92%;text-align:center;padding:4px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:8px}
-.msg.sys b{font:800 1.35rem/1.1 var(--display);font-stretch:80%;color:var(--ink);text-wrap:balance}
-.msg.note{color:var(--muted);font-size:.86rem;padding:4px 10px}
-.msg.media{padding:6px;width:min(240px,78%)}
-.msg.media img{border-radius:16px;width:100%}
-.msg.media audio{width:100%;display:block}
-.msg .cap{display:block;font:500 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:9px 8px 5px;opacity:.75}
-.msg.ask{max-width:100%;align-self:stretch;display:flex;flex-direction:column;gap:14px;border-radius:21px;padding:16px}
-.composer{display:flex;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -1px 0 var(--line)}
-.cinput{flex:1;min-width:0;height:46px;border:0;border-radius:23px;background:var(--paper);color:var(--ink);padding:12px 16px;resize:none;font-size:1rem;line-height:1.35}
-.cinput::placeholder{color:var(--muted)}
-.cinput:focus{outline:2px solid var(--line-2);outline-offset:0}
-.nowbtn{appearance:none;flex:none;height:46px;display:inline-flex;align-items:center;gap:8px;border:0;background:var(--paper);color:var(--ink);border-radius:23px;padding:0 15px;font-weight:600;cursor:pointer}
-.sendbtn{appearance:none;flex:none;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);display:grid;place-items:center;cursor:pointer}
+.tabbar .ld{position:absolute;top:3px;left:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:var(--rec);box-shadow:0 0 0 2px var(--card);animation:blink 1.2s steps(2,start) infinite}
 
 /* sheet + toast */
 .scrim{position:fixed;inset:0;background:rgba(8,6,20,.55);z-index:20;animation:fade .15s ease}
@@ -302,8 +343,16 @@ fieldset.field{border:0;margin:0;padding:0}
   padding:10px max(20px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
 .grab{width:40px;height:5px;border-radius:3px;background:var(--line-2);align-self:center;margin-bottom:6px}
 .sheet h3{font:800 1.5rem/1.05 var(--display);font-stretch:80%}
-.sheet .recline{display:flex;align-items:center;justify-content:space-between}
+.sheet .recline{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sheet .timecode{color:var(--ink);font-size:2.6rem}
+.sheet .recline .timecode.sm{font-size:2rem}
+.sheet .timecode.low{color:var(--rec)}
+.quote{font-size:1rem;line-height:1.4;color:var(--ink-2);border-left:3px solid var(--rec);padding-left:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.likebox{height:auto;min-height:86px;padding:12px 16px;resize:none;line-height:1.4}
+.sheet.knockin{background:var(--night);color:var(--on-night);align-items:center;text-align:center;gap:14px}
+.sheet.knockin .grab{background:var(--night-line)}
+.sheet.knockin .fine{color:var(--on-night-2);max-width:30ch}
+.sheet.knockin .ring{margin-top:6px}
 @keyframes rise{from{transform:translate(-50%,24px);opacity:0}}
 @keyframes fade{from{opacity:0}}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--night-3);color:var(--on-night);padding:11px 18px;border-radius:999px;font-weight:500;font-size:.92rem;z-index:30;max-width:calc(100% - 40px);text-align:center;box-shadow:0 14px 34px rgba(0,0,0,.3)}
@@ -323,7 +372,7 @@ fieldset.field{border:0;margin:0;padding:0}
 'use strict';
 
 /* ---------- example people ---------- */
-// Clearly labelled as examples in the UI; their answers and chat replies are scripted.
+// Clearly labelled as examples in the UI; their answers and live replies are scripted.
 // No two of them share a question, and none of their questions can ever be dealt to you.
 const PEOPLE = [
   { id:'maya', name:'Maya', age:27, g:'woman', km:3, hue:8, days:2, back:true,
@@ -338,7 +387,8 @@ const PEOPLE = [
       { q:"What's a sound you love?", a:"the kettle clicking off. means tea is happening" },
       { q:"What did you nearly buy this week?", a:"a second plant to keep the plant i can't keep alive company" }
     ],
-    replies:["haha ok. you type faster than me", "fair. what are you doing this weekend?", "nice. i'm free saturday afternoon if you want to get a coffee"] },
+    replies:["haha ok. you type faster than me", "fair. what are you doing this weekend?", "nice. i'm free saturday afternoon if you want to get a coffee"],
+    bye:"i have to head off. this was nice. same time another day?" },
   { id:'kabir', name:'Kabir', age:30, g:'man', km:5, hue:205, days:1, back:true,
     answers:[
       { q:"What's a job you'd be terrible at?", a:"air traffic control. i get stressed when two people talk to me at once in a kitchen", secs:19 },
@@ -351,7 +401,8 @@ const PEOPLE = [
       { q:"What's the last thing you got told off for?", a:"leaving a teaspoon in the sink at work. by someone i don't manage, or know" },
       { q:"What's your most used emoji, and is it a cry for help?", a:"the upside down smiley. yes" }
     ],
-    replies:["ok that's better than mine", "so what do you do when you're not answering questions against a clock", "ha. want to carry this on over a walk sometime?"] },
+    replies:["ok that's better than mine", "so what do you do when you're not answering questions against a clock", "ha. want to carry this on over a walk sometime?"],
+    bye:"ok i have to go, my aunt is calling. about the jar, probably" },
   { id:'sara', name:'Sara', age:26, g:'woman', km:2, hue:330, days:4, back:true,
     answers:[
       { q:"What's your go-to order when nobody's judging?", a:"fries and a milkshake and i dip them. yes. i know", secs:12,
@@ -364,7 +415,8 @@ const PEOPLE = [
       { q:"What's your comfort film?", a:"the princess diaries. i will not be taking questions" },
       { q:"What's a word you always spell wrong?", a:"necessary. i know the trick. the trick does not help" }
     ],
-    replies:["honestly same energy", "what's your week looking like?", "ok good. thursday evening? there's a place with decent fries"] },
+    replies:["honestly same energy", "what's your week looking like?", "ok good. thursday evening? there's a place with decent fries"],
+    bye:"i need to go but this was fun. thursday still on?" },
   { id:'dev', name:'Dev', age:29, g:'man', km:7, hue:150, days:6, back:true,
     answers:[
       { q:"What's a hill you'll die on that doesn't matter at all?", a:"tea goes in before milk. this isn't up for discussion", secs:9 },
@@ -376,7 +428,8 @@ const PEOPLE = [
       { q:"What's the last thing you did on autopilot?", a:"drove to my old office. i changed jobs in june" },
       { q:"What's an opinion you'd defend in front of anyone?", a:"cricket is better on the radio" }
     ],
-    replies:["that's a strong answer", "are you a morning person then", "right. sunday morning, coffee. i'll set three alarms"] },
+    replies:["that's a strong answer", "are you a morning person then", "right. sunday morning, coffee. i'll set three alarms"],
+    bye:"right, i have to go. three alarms, remember" },
   { id:'nina', name:'Nina', age:31, g:'woman', km:4, hue:265, days:3, back:true,
     answers:[
       { q:"What's a place you keep going back to?", a:"there's a second hand bookshop near the station. i have never left in under an hour", secs:38 },
@@ -389,7 +442,8 @@ const PEOPLE = [
       { q:"What's the last thing you recommended to someone?", a:"a crime novel set on a ferry. they haven't replied, so they're either hooked or furious" },
       { q:"What's a phrase you say too often?", a:"'right then' before i stand up. i'm 31" }
     ],
-    replies:["i like that", "what are you reading at the moment?", "ok you should see that bookshop. saturday?"] },
+    replies:["i like that", "what are you reading at the moment?", "ok you should see that bookshop. saturday?"],
+    bye:"i have to go, but this was lovely. bookshop on saturday?" },
   { id:'arjun', name:'Arjun', age:28, g:'man', km:1, hue:28, days:1, back:true,
     answers:[
       { q:"What's on your phone's home screen, and why?", a:"my dog in a raincoat looking betrayed", secs:8 },
@@ -402,7 +456,8 @@ const PEOPLE = [
       { q:"What's something you do that your friends find strange?", a:"talk to my dog in full sentences. he gets most of it" },
       { q:"What did you want to be when you were little?", a:"a bin man. i loved the truck. still do" }
     ],
-    replies:["ha, respect", "do you want to meet the dog", "good. park on sunday, bring a raincoat just in case"] },
+    replies:["ha, respect", "do you want to meet the dog", "good. park on sunday, bring a raincoat just in case"],
+    bye:"the dog wants his walk, i have to go. this was good" },
   { id:'aisha', name:'Aisha', age:25, g:'woman', km:6, hue:180, days:5, back:false,
     answers:[
       { q:"What's a song you know every word of, and how did that happen?", a:"an ad jingle for a mattress shop from when i was 8. it never left. i'd sing it but this is text", secs:26 },
@@ -429,8 +484,22 @@ const PEOPLE = [
       { q:"What's a word you love the sound of?", a:"kerfuffle. i use it at work and nobody stops me" },
       { q:"What's the last thing that made you stop and stare?", a:"a pigeon on the bus. it got off at the right stop" }
     ],
-    replies:["ha ok, noted", "what's the best thing you did this week?", "we should compare notes in person. friday?"] }
+    replies:["ha ok, noted", "what's the best thing you did this week?", "we should compare notes in person. friday?"],
+    bye:"ok i'm off. this was a good kerfuffle" }
 ];
+// Presence, how often they stay till the end, and the scripted lines they use in a live conversation.
+const EXTRA = {
+  maya:  { here:true, focus:[11, 12], react:"ok that answer is very you", likeLine:"ok i need to know more about this" },
+  kabir: { here:true, focus:[7, 9], react:"ha. i'm keeping that one", likeLine:"this is the best answer i've read today" },
+  sara:  { here:true, focus:[14, 14], react:"noted. that tells me a lot", likeLine:"you can't just say that and not explain" },
+  dev:   { here:true, focus:[5, 8], react:"strong answer. no notes", likeLine:"strong. very strong" },
+  nina:  { here:true, focus:[9, 10], react:"i like how fast you said that", likeLine:"i read this twice. well, once. it's that kind of app" },
+  arjun: { here:true, focus:[6, 6], react:"ha, the dog would approve", likeLine:"the dog and i both liked this" },
+  aisha: { here:false, usual:'around 8 pm', focus:[3, 4] },
+  rohan: { here:false, usual:'early mornings', focus:[8, 10] },
+  sam:   { here:false, usual:'around 9 pm', focus:[10, 11], react:"ok that's going in the notes app", likeLine:"framing this, metaphorically" }
+};
+PEOPLE.forEach(p => Object.assign(p, EXTRA[p.id]));
 const person = id => PEOPLE.find(p => p.id === id);
 
 /* ---------- question bank ---------- */
@@ -564,21 +633,28 @@ function shuffle(list){
 }
 const canVoice = !!(navigator.mediaDevices && window.MediaRecorder);
 const TABS = ['discover', 'matches', 'me'];
-const NIGHT = ['welcome', 'photo', 'question', 'matched'];
-const DAY = 86400000, WEEK = 7 * DAY;
+const NIGHT = ['welcome', 'photo', 'question', 'matched', 'talk'];
+const DAY = 86400000, WEEK = 7 * DAY, TURN = 30, LIKE_SECS = 15, LIVE_MINS = 20, KNOCK_SECS = 10, RECALL_SECS = 10;
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const pad = n => String(n).padStart(2, '0');
 const fmtClock = s => `${Math.floor(s / 60)}:${pad(s % 60)}`;
-const fmtTime = ts => { const d = new Date(ts); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 const fmtDay = ts => { const d = new Date(ts); return `${d.getDate()} ${MON[d.getMonth()]}`; };
+function ago(ts){
+  const m = Math.floor((Date.now() - ts) / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m} min ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} h ago`;
+  return h < 48 ? 'yesterday' : `${Math.floor(h / 24)} days ago`;
+}
 
 let toastTimer;
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.hidden = false;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 2800);
 }
 
 /* ---------- icons ---------- */
@@ -590,19 +666,17 @@ const ICONS = {
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/>',
   heart:'<path d="M12 20s-7.5-4.5-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.5-7.5 10-7.5 10z"/>',
   x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
-  back:'<path d="M14.5 5.5 8 12l6.5 6.5"/>',
-  chev:'<path d="M9.5 5.5 16 12l-6.5 6.5"/>',
-  more:'<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
-  send:'<path d="M12 19V5.5M6.5 11 12 5.5l5.5 5.5"/>',
   cards:'<rect x="7" y="3.5" width="12" height="15" rx="2.5"/><path d="M4.5 7v10.5a3 3 0 0 0 3 3h8"/>',
   chat:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',
   user:'<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4.1-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>',
   flag:'<path d="M5.5 21V4M5.5 4.5h11l-2 4 2 4h-11"/>',
   lock:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
   eyeoff:'<path d="M3.5 3.5l17 17"/><path d="M10.5 5.1A9 9 0 0 1 12 5c5 0 8.4 4.3 9.3 7-.4 1.1-1.1 2.4-2.2 3.6M6.4 6.6C4.6 7.9 3.3 9.8 2.7 12c.9 2.7 4.3 7 9.3 7 1.6 0 3.1-.4 4.4-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
-  spark:'<path d="M12 3.5c.6 4.4 2.3 6.1 6.5 6.7-4.2.6-5.9 2.3-6.5 6.7-.6-4.4-2.3-6.1-6.5-6.7 4.2-.6 5.9-2.3 6.5-6.7z"/><path d="M18.5 16.5v4M16.5 18.5h4"/>'
+  spark:'<path d="M12 3.5c.6 4.4 2.3 6.1 6.5 6.7-4.2.6-5.9 2.3-6.5 6.7-.6-4.4-2.3-6.1-6.5-6.7 4.2-.6 5.9-2.3 6.5-6.7z"/><path d="M18.5 16.5v4M16.5 18.5h4"/>',
+  focus:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/>',
+  play:'<path d="M8 5.5v13l10.5-6.5z"/>'
 };
-const I = (name, size = 22) => `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+const I = (name, size = 22, cls = '') => `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
 
 /* ---------- date stamp and example portraits ---------- */
 // The amber seven-segment date stamp of a film camera, burned into the pixels of every photo.
@@ -665,7 +739,7 @@ function basePortrait(p){
     g.lineWidth = 3; g.strokeStyle = col; g.stroke();
   }
   g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-  // a backlit figure: shoulders, head and hair as one dark shape with a glowing rim
+  // a backlit figure: shoulders, head and hair as one shape with a glowing rim
   const cx = W * (0.44 + r() * 0.12), hy = H * (0.39 + r() * 0.04), hr = W * (0.12 + r() * 0.02), style = Math.floor(r() * 3);
   const rim = r() < 0.5 ? 'hsla(36,100%,70%,0.95)' : `hsla(${(h + 330) % 360},95%,78%,0.95)`;
   g.beginPath();
@@ -731,35 +805,73 @@ function avatarSrc(p){
   return AVATARS[p.id] = c.toDataURL('image/jpeg', 0.85);
 }
 
+/* ---------- typing replay ---------- */
+// Every typed answer keeps how it was typed: each change and when it happened, not just the result.
+// Others can watch it unfold, pauses and corrections included. Text read off another screen looks robotic.
+function diffText(a, b){
+  let s = 0;
+  while (s < a.length && s < b.length && a[s] === b[s]) s++;
+  let ea = a.length, eb = b.length;
+  while (ea > s && eb > s && a[ea - 1] === b[eb - 1]) { ea--; eb--; }
+  return [s, ea - s, b.slice(s, eb)];
+}
+// Typing for the example answers: a human rhythm with pauses and the odd fixed typo, or steady and flawless when it was read out.
+const FAKE = {};
+function fakeKeys(text, seedStr, robotic){
+  const key = seedStr + (robotic ? '|r|' : '|h|') + text;
+  if (FAKE[key]) return FAKE[key];
+  const r = rng(seedOf(key)), keys = [], near = 'qwertyuiopasdfghjklzxcvbnm';
+  let t = robotic ? 900 : 700 + r() * 1600, cur = 0;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (robotic) { t += 46; keys.push([Math.round(t), cur, 0, ch]); cur++; continue; }
+    if (r() < 0.035 && /[a-z]/.test(ch)) {
+      t += 70 + r() * 90; keys.push([Math.round(t), cur, 0, near[Math.floor(r() * near.length)]]);
+      t += 200 + r() * 420; keys.push([Math.round(t), cur, 1, '']);
+    }
+    t += 55 + r() * 125 + (/[.,?!]/.test(text[i - 1] || '') ? 250 + r() * 600 : 0) + (ch === ' ' && r() < 0.07 ? 500 + r() * 1500 : 0);
+    keys.push([Math.round(t), cur, 0, ch]); cur++;
+  }
+  return FAKE[key] = keys;
+}
+const countFixes = keys => keys.reduce((n, k, i) => n + (k[2] > 0 && !(i > 0 && keys[i - 1][2] > 0) ? 1 : 0), 0);
+let REPLAYS = [];
+
 /* ---------- state ---------- */
-const KEY = 'offhand.v2', LIVE_KEY = 'offhand.live';
-const fresh = () => ({ me:null, seen:[], liked:{}, passed:{}, blocked:{}, matches:[], chats:{} });
+const KEY = 'offhand.v2', LIVE_KEY = 'offhand.live', TALK_KEY = 'offhand.talk', ENDED_KEY = 'offhand.ended';
+const fresh = () => ({ me:null, seen:[], liked:{}, passed:{}, blocked:{}, matches:[], talks:{}, focus:{ stayed:0, total:0 } });
 function load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
 function save(){
   try { localStorage.setItem(KEY, JSON.stringify(S)); return true; }
   catch (e) { toast("Couldn't save on this device. Storage is full or blocked."); return false; }
 }
+const readJSON = k => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const drop = k => { try { localStorage.removeItem(k); } catch (e) {} };
 // A question in progress is written down as it happens, so closing or reloading can't restart it.
-function loadLive(){ try { return JSON.parse(localStorage.getItem(LIVE_KEY)); } catch (e) { return null; } }
-function saveLive(v){ try { localStorage.setItem(LIVE_KEY, JSON.stringify(v)); } catch (e) {} }
-function clearLive(){ try { localStorage.removeItem(LIVE_KEY); } catch (e) {} }
+const loadLive = () => readJSON(LIVE_KEY), saveLive = v => writeJSON(LIVE_KEY, v), clearLive = () => drop(LIVE_KEY);
 
 let S = load() || fresh();
 if (!Array.isArray(S.seen)) S.seen = [];
+if (!S.talks) S.talks = {};
+if (!S.focus) S.focus = { stayed:0, total:0 };
+delete S.chats;   // conversations are never stored any more
 let view = 'welcome', lastView = '';
 let Q = null;          // the question on screen
 let P = null;          // photo being taken
-let V = null;          // voice note being recorded in chat
-let chatId = null, matchId = null, sheet = null, resetArmed = false;
-let draft = null;      // unsent chat text: {id, text}
-let voiceStarting = false;
+let V = null;          // voice note being recorded
+let T = null;          // the live conversation
+let matchId = null, sheet = null, resetArmed = false, voiceStarting = false;
+let liveUntil = 0, liveTick = null, knockTimer = null, knockTick = null, knockedThisSession = false, likeTimer = null, lastPartner = null;
 
 const fits = p => !S.me || S.me.show === 'everyone' || (S.me.show === 'women' ? p.g === 'woman' : p.g === 'man');
-const norm = a => ({ q:a.q, text:a.a, secs:a.secs, limit:45, mode:'text', left:!!a.left, timedOut:!!a.timedOut,
+const norm = (a, seed) => ({ q:a.q, text:a.a, secs:a.secs, limit:45, mode:'text', left:!!a.left, timedOut:!!a.timedOut,
+  keys: a.a ? fakeKeys(a.a, seed, !!a.left) : null,
   twist: a.tw ? { q:a.tw.q, text:a.tw.a, secs:a.tw.secs, limit:15, timedOut:!!a.tw.timedOut } : null });
-const preview = m => m.text || ({ photo:'Right-now photo', voice:'Right-now voice note', ask:'Asked for a right-now check-in' }[m.kind] || '');
 // One new profile photo a week, so a new photo can't be used as a retake.
 function photoWait(){ return S.me && S.me.photo && Date.now() < S.me.photoAt + WEEK ? fmtDay(S.me.photoAt + WEEK) : ''; }
+const talkRec = id => S.talks[id] || (S.talks[id] = { n:0, used:[], last:null });
+const isLive = () => liveUntil > Date.now();
 
 /* ---------- dealing questions ---------- */
 function moment(){
@@ -771,8 +883,10 @@ const textOf = it => typeof it.q === 'function' ? it.q(moment()) : it.q;
 // A question you haven't had before, from one family if possible.
 function draw(fam, also = []){
   const used = new Set([...S.seen, ...also]);
-  let list = POOL.filter(it => it.fam === fam && !used.has(it.id));
-  if (!list.length) list = POOL.filter(it => !used.has(it.id));
+  const mine = new Set(S.me ? S.me.answers.map(a => a.q) : []);   // never one that's already on your profile
+  const ok = it => !used.has(it.id) && !mine.has(textOf(it));
+  let list = POOL.filter(it => it.fam === fam && ok(it));
+  if (!list.length) list = POOL.filter(ok);
   return pick(list.length ? list : POOL);
 }
 function markSeen(id){ if (!S.seen.includes(id)) S.seen.push(id); }
@@ -819,6 +933,11 @@ function answerCard(a, extraHtml = ''){
   ];
   if (a.timedOut) chips.push('<span class="chip">Clock ran out</span>');
   if (a.left) chips.push('<span class="chip warn">Left the app while answering</span>');
+  let replay = '';
+  if (a.text && a.keys && a.keys.length) {
+    const idx = REPLAYS.push({ keys:a.keys, text:a.text }) - 1, fixes = countFixes(a.keys);
+    replay = `<button class="replay" data-act="replay" data-r="${idx}" aria-label="Watch this answer being typed">${I('play', 12)}Watch it typed${fixes ? ` · ${fixes} fix${fixes > 1 ? 'es' : ''}` : ' · no fixes'}</button>`;
+  }
   const body = a.audio ? `<audio controls src="${a.audio}"></audio>`
     : a.text ? `<p class="atext">${esc(a.text)}</p>`
     : `<p class="atext none">${emptyText(a, a.cut)}</p>`;
@@ -828,32 +947,29 @@ function answerCard(a, extraHtml = ''){
       : t.text ? `<p class="atext">${esc(t.text)}</p>`
       : `<p class="atext none">${emptyText(t, a.cut)}</p>`
     }<div class="meta"><span class="chip tc">${fmtClock(t.secs)} / ${fmtClock(t.limit)}</span>${t.timedOut ? '<span class="chip">Clock ran out</span>' : ''}</div></div>` : '';
-  return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}</div>${tw}${extraHtml}</article>`;
+  return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}${replay}</div>${tw}${extraHtml}</article>`;
 }
 const avatar = p => `<span class="av"><img src="${avatarSrc(p)}" alt=""></span>`;
 const stepHead = n => `<div class="stephead"><div class="steps">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div><p class="eyebrow">Step ${n} of 3</p></div>`;
+const focusFact = (stayed, total) => `<div class="facts"><span class="fact">${I('focus', 16)}${total ? `Stayed till the end in ${stayed} of ${total} live conversations` : 'No live conversations yet'}</span></div>`;
 function tabbar(){
-  const waiting = S.matches.filter(id => !S.chats[id] && !S.blocked[id]).length;
+  const waiting = S.matches.filter(id => !S.blocked[id] && !talkRec(id).n).length;
   const tab = (id, label, icon, extra = '') => `<button data-act="go" data-to="${id}" ${view === id ? 'aria-current="page"' : ''}><span class="tb">${I(icon)}</span>${label}${extra}</button>`;
-  return `<nav class="tabbar" aria-label="Main">${tab('discover', 'Discover', 'cards')}${tab('matches', 'Matches', 'chat', waiting ? `<span class="n">${waiting}</span>` : '')}${tab('me', 'Me', 'user')}</nav>`;
+  const mExtra = (isLive() ? '<span class="ld" aria-label="You are live"></span>' : '') + (waiting ? `<span class="n">${waiting}</span>` : '');
+  return `<nav class="tabbar" aria-label="Main">${tab('discover', 'Discover', 'cards')}${tab('matches', 'Matches', 'chat', mExtra)}${tab('me', 'Me', 'user')}</nav>`;
 }
 function sheetHtml(){
-  const p = person(sheet.id);
-  if (sheet.type === 'now') {
-    const c = S.chats[sheet.id], asked = c.askedAt && Date.now() - c.askedAt < DAY;
-    return `<div class="scrim" data-act="closeSheet"></div>
+  if (sheet.type === 'now') return `<div class="scrim" data-act="closeSheet"></div>
     <div class="sheet" role="dialog" aria-label="Right-now check-in">
       <span class="grab"></span>
       <h3>Right now</h3>
-      <p class="fine">A quick live check-in before you meet. One take, sent as it is. Nobody has to send one.</p>
+      <p class="fine">Send this instead of words for your turn. One take, seen once, sent as it is.</p>
       <div class="opts">
         <button class="opt" data-act="nowPhoto"><span class="oi">${I('camera')}</span><span><b>Send a right-now photo</b><small>One shot, date-stamped, sent instantly</small></span></button>
         ${canVoice ? `<button class="opt" data-act="nowVoice"><span class="oi">${I('mic')}</span><span><b>Send a 10-second voice note</b><small>One take, sends when you stop</small></span></button>` : ''}
-        ${sheet.reply ? '' : `<button class="opt" data-act="nowAsk" ${asked ? 'disabled' : ''}><span class="oi">${I('clock')}</span><span><b>${asked ? `You asked ${esc(p.name)} today` : `Ask ${esc(p.name)} for one`}</b><small>Once a day. They can say no.</small></span></button>`}
       </div>
       <button class="btn ghost" data-act="closeSheet">Cancel</button>
     </div>`;
-  }
   if (sheet.type === 'voice') return `<div class="scrim"></div>
     <div class="sheet" role="dialog" aria-label="Recording a voice note">
       <span class="grab"></span>
@@ -862,12 +978,37 @@ function sheetHtml(){
       <p class="fine">One take, up to 10 seconds. It sends when you stop or when the clock ends.</p>
       <button class="btn rec" data-act="noteSend">Stop and send</button>
     </div>`;
+  if (sheet.type === 'like') {
+    const p = person(sheet.id), a = p.answers[sheet.i];
+    return `<div class="scrim" data-act="closeSheet"></div>
+    <div class="sheet" role="dialog" aria-label="Like ${esc(p.name)}'s answer">
+      <span class="grab"></span>
+      <div class="recline"><h3>Say why, on the spot</h3><span class="timecode sm" id="likeclock">${fmtClock(LIKE_SECS)}</span></div>
+      <p class="quote">${esc(a.a || a.q)}</p>
+      <textarea class="input likebox" id="likesay" placeholder="Whatever you've typed goes with your like at 0:00." maxlength="160" autocomplete="off" aria-label="Why you like it"></textarea>
+      <button class="btn rec" data-act="likeSend">${I('heart', 18, 'fill')}Send like</button>
+      <p class="fine">No words, no like. ${esc(p.name)} sees exactly what you typed.</p>
+    </div>`;
+  }
+  if (sheet.type === 'knock') {
+    const p = person(sheet.id), left = Math.max(0, Math.ceil((sheet.until - Date.now()) / 1000));
+    return `<div class="scrim"></div>
+    <div class="sheet knockin" role="dialog" aria-label="${esc(p.name)} is knocking">
+      <span class="grab"></span>
+      <span class="ring"><img src="${avatarSrc(p)}" alt=""></span>
+      <h3>${esc(p.name)} is knocking</h3>
+      <p class="fine">Join within <span id="knockcd">${left}</span> seconds or they move on. It opens with a random question you both answer.</p>
+      <button class="btn rec" data-act="knockJoin">Join now</button>
+      <button class="btn ghost-night" data-act="knockSkip">Not now</button>
+    </div>`;
+  }
+  const p = person(sheet.id);
   const reasons = ["Photo doesn't look live", 'Answers seem scripted or AI-written', 'Rude or unsafe behaviour', 'Something else'];
   return `<div class="scrim" data-act="closeSheet"></div>
   <div class="sheet" role="dialog" aria-label="Report or block">
     <span class="grab"></span>
     <h3>Report or block ${esc(p.name)}</h3>
-    <p class="fine">Reporting also blocks. You won't see each other again.</p>
+    <p class="fine">Reporting also blocks. You won't see each other again${T && T.phase !== 'ended' ? ', and this conversation ends now' : ''}.</p>
     <div class="opts">
       ${reasons.map(r => `<button class="opt" data-act="doReport"><span class="oi">${I('flag', 20)}</span><span><b>${esc(r)}</b></span></button>`).join('')}
       <button class="opt" data-act="doBlock"><span class="oi">${I('x', 20)}</span><span><b>Just block, no report</b></span></button>
@@ -897,8 +1038,8 @@ const VIEWS = {
       <ul class="rules">
         <li><span class="ico">${I('camera')}</span><div><b>Live photos only</b><span>One shot, date-stamped. No uploads, no filters, no retakes.</span></div></li>
         <li><span class="ico">${I('shuffle')}</span><div><b>Random questions</b><span>You'll never get one you've seen someone else answer.</span></div></li>
-        <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>Each question stays hidden until its clock starts.</span></div></li>
-        <li><span class="ico">${I('type')}</span><div><b>Your own words</b><span>Typed or spoken by you. Pasting is off everywhere.</span></div></li>
+        <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>Each question stays hidden until its clock starts. Pasting is off everywhere.</span></div></li>
+        <li><span class="ico">${I('focus')}</span><div><b>Full focus</b><span>Talk live, one person at a time. Messages show once, and next time you're both asked what you remember.</span></div></li>
       </ul>
       <p class="fine">This is a prototype. Nothing you enter leaves this browser, and the other profiles are examples.</p>
     </section>`;
@@ -929,10 +1070,10 @@ const VIEWS = {
   },
 
   photo(){
-    const first = P.from === 'onboard', chat = P.from === 'chat', back = chat ? 'chat' : 'me';
-    const them = chat ? esc(person(chatId).name) : '';
+    const first = P.from === 'onboard', live = P.from === 'live';
+    const them = live && T ? esc(T.p.name) : '';
     const top = first ? stepHead(2)
-      : `<div class="topline"><button class="iconbtn" data-act="go" data-to="${back}" aria-label="Cancel">${I('x')}</button><span class="eyebrow">${chat ? 'Right-now check-in' : 'New live photo'}</span><span style="width:44px"></span></div>`;
+      : `<div class="topline"><button class="iconbtn" data-act="${live ? 'photoBack' : 'go'}" data-to="me" aria-label="Cancel">${I('x')}</button><span class="eyebrow">${live ? 'Your turn · right now' : 'New live photo'}</span><span style="width:44px"></span></div>`;
     if (P.shot) return `<section class="screen">
       ${top}
       <div class="intro"><h2>${first ? "That's your photo" : "That's your new photo"}</h2><p class="lede">It's locked in, with the date and time burned into it.</p></div>
@@ -941,8 +1082,8 @@ const VIEWS = {
     </section>`;
     return `<section class="screen">
       ${top}
-      <div class="intro"><h2>${chat ? 'Take a photo right now' : 'Take your photo now'}</h2>
-        <p class="lede">${chat ? `One shot. It goes to ${them} the moment you take it, stamped with the date and time.` : "One shot, no uploads, no retakes. It's stamped with today's date and time."}</p></div>
+      <div class="intro"><h2>${live ? 'Take a photo right now' : 'Take your photo now'}</h2>
+        <p class="lede">${live ? `One shot. It goes to ${them} the moment you take it, and they see it once. Your turn clock is still running.` : "One shot, no uploads, no retakes. It's stamped with today's date and time."}</p></div>
       <div class="cam">
         <video id="vid" autoplay playsinline muted></video>
         <span class="tag"><i class="dot blink"></i>Live</span>
@@ -950,7 +1091,7 @@ const VIEWS = {
       </div>
       ${P.error
         ? `<div class="stack push"><button class="btn light" data-act="camRetry">Try the camera again</button>${first ? '<button class="btn ghost-night" data-act="skipPhoto">Continue without a photo</button>' : ''}</div>`
-        : `<div class="shutterwrap push"><button class="shutter ${chat ? 'send' : ''}" id="snap" data-act="snap" disabled aria-label="${chat ? 'Take and send' : 'Take photo'}"></button><span class="hint">${chat ? 'Take and send' : 'Take photo'}</span></div>`}
+        : `<div class="shutterwrap push"><button class="shutter ${live ? 'send' : ''}" id="snap" data-act="snap" disabled aria-label="${live ? 'Take and send' : 'Take photo'}"></button><span class="hint">${live ? 'Take and send' : 'Take photo'}</span></div>`}
     </section>`;
   },
 
@@ -962,6 +1103,7 @@ const VIEWS = {
         <li><span class="ico">${I('eyeoff')}</span><div><b>You can't see them yet</b><span>Each question appears when you start its clock.</span></div></li>
         <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>When the clock stops, that's your answer. It can't be edited or removed.</span></div></li>
         <li><span class="ico">${I('lock')}</span><div><b>No second tries</b><span>Pasting is off. Switching away marks your answer, and reloading locks it as it is.</span></div></li>
+        <li><span class="ico">${I('play')}</span><div><b>Typed for real</b><span>Others can watch how you typed it, pauses and corrections included.</span></div></li>
         <li><span class="ico">${I('spark')}</span><div><b>Expect one twist</b><span>One of the three comes with a surprise follow-up on its own 15-second clock.</span></div></li>
       </ul>
       <fieldset class="field"><legend>How do you want to answer?</legend>
@@ -997,13 +1139,13 @@ const VIEWS = {
       <p class="qmeta"><span id="chars">${Q.mode === 'voice' ? 'One take' : '0 characters'}</span><span class="flag" id="leftflag" ${Q.left ? '' : 'hidden'}>You left the app. The answer will be marked.</span></p>
       <button class="btn light push" data-act="qLock">Lock my answer</button>
     </section>`;
-    const r = Q.record, match = Q.ctx === 'opening' ? person(Q.matchId) : null;
+    const r = Q.record;
     return `<section class="screen">
       <p class="eyebrow">${I('lock', 14)}Locked</p>
       <h1>${(r.twist || r).timedOut ? "Time. That's your answer." : 'Answer locked.'}</h1>
       ${Q.cut ? '<p class="lede">You left before the clock finished, so the answer was locked as it was.</p>' : ''}
       ${answerCard(r)}
-      <p class="fine">${match ? `${esc(match.name)} sees this when the chat opens. It can't be changed.` : "It can't be edited or removed. This is how other people see it."}</p>
+      <p class="fine">It can't be edited or removed. This is how other people see it, typing and all.</p>
       <button class="btn light push" data-act="qNext">${esc(nextLabel())}</button>
     </section>`;
   },
@@ -1012,23 +1154,24 @@ const VIEWS = {
     const deck = PEOPLE.filter(p => fits(p) && !S.liked[p.id] && !S.passed[p.id] && !S.blocked[p.id]);
     const head = n => `<header class="topline"><span class="wordmark"><i class="dot"></i>offhand</span><span class="chip solid tc">${n} nearby</span></header>`;
     if (!deck.length) return `<section class="screen">${head(0)}
-      <div class="empty">${I('cards', 30)}<b>You've seen everyone nearby.</b><span>In the real app, new people show up here as they join.</span></div>
-      ${Object.keys(S.passed).length ? '<button class="btn secondary" data-act="unpass">Show the people I passed again</button>' : ''}
+      <div class="empty">${I('cards', 30)}<b>You've seen everyone nearby.</b><span>Each profile shows once. In the real app, new people show up here as they join.</span></div>
     </section>`;
     const p = deck[0];
     return `<section class="screen">${head(deck.length)}
       <figure class="portrait"><img src="${portraitSrc(p)}" alt="Example photo for ${esc(p.name)}"><span class="tag">Example profile</span>
         <figcaption><b>${esc(p.name)}, ${p.age}</b><span>${p.km} km away · ${esc(S.me.city)}</span></figcaption></figure>
-      ${p.answers.map((a, i) => answerCard(norm(a), `<button class="likebtn" data-act="like" data-id="${p.id}" data-i="${i}" aria-label="Like this answer">${I('heart', 18)}Like</button>`)).join('')}
+      ${focusFact(p.focus[0], p.focus[1])}
+      ${p.answers.map((a, i) => answerCard(norm(a, p.id + i), a.a ? `<button class="likebtn" data-act="like" data-id="${p.id}" data-i="${i}" aria-label="Like this answer">${I('heart', 18)}Like</button>` : '')).join('')}
       <div class="deckbar">
-        <button class="btn secondary" data-act="pass" data-id="${p.id}">${I('x', 20)}Pass</button>
+        <button class="btn secondary" data-act="pass" data-id="${p.id}">${I('x', 20)}Pass for good</button>
         <button class="iconbtn outline" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('flag', 20)}</button>
       </div>
     </section>`;
   },
 
   matched(){
-    const p = person(matchId), mine = S.me.photo;
+    const p = person(matchId), mine = S.me.photo, said = (S.liked[p.id] || {}).said;
+    const yours = S.me.answers.find(a => a.text);
     return `<section class="screen">
       <p class="eyebrow">It's mutual</p>
       <div class="pair" aria-hidden="true">
@@ -1037,10 +1180,14 @@ const VIEWS = {
         <span class="heart">${I('heart', 26)}</span>
       </div>
       <h1>You and ${esc(p.name)} liked each other.</h1>
-      <p class="lede">The chat opens with one random question you both answer on the spot: 30 seconds, typed, no pasting.</p>
+      <div class="words">
+        ${said ? `<div class="word"><span class="eyebrow">You said</span><p>${esc(said)}</p></div>` : ''}
+        ${yours && p.likeLine ? `<div class="word"><span class="eyebrow">${esc(p.name)}, on your answer</span><p>${esc(p.likeLine)}</p></div>` : ''}
+      </div>
+      <p class="lede">${p.here ? "Talk live while you're both here. It opens with a random question you both answer, and messages show once." : `${esc(p.name)} isn't here right now. Usually here ${esc(p.usual)}.`}</p>
       <div class="stack push">
-        <button class="btn rec" data-act="opening">Start the opening question</button>
-        <button class="btn ghost-night" data-act="go" data-to="matches">Later</button>
+        ${p.here ? `<button class="btn rec" data-act="talk" data-id="${p.id}">${esc(p.name)} is here. Talk now</button>` : ''}
+        <button class="btn ghost-night" data-act="go" data-to="matches">${p.here ? 'Later' : 'Back to matches'}</button>
       </div>
     </section>`;
   },
@@ -1049,34 +1196,65 @@ const VIEWS = {
     const ms = S.matches.filter(id => !S.blocked[id]).map(person);
     const pending = Object.keys(S.liked).filter(id => !S.matches.includes(id) && !S.blocked[id]).map(person);
     const row = p => {
-      const c = S.chats[p.id];
-      const last = c ? preview(c.msgs[c.msgs.length - 1]) : 'Opening question waiting';
-      return `<button class="item" data-act="openMatch" data-id="${p.id}">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span>${esc(last)}</span></span>${I('chev', 20)}</button>`;
+      if (!p.here) return `<div class="item static off">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span><i class="away"></i>Away · usually here ${esc(p.usual)}</span></span></div>`;
+      const last = talkRec(p.id).last;
+      const sub = last ? `Talked ${fmtClock(last.secs)}, ${ago(last.at)}` : "Haven't talked yet";
+      return `<button class="item" data-act="talk" data-id="${p.id}">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span><i class="here"></i>Here now · ${sub}</span></span><span class="pill">Talk now</span></button>`;
     };
+    const left = Math.max(0, Math.round((liveUntil - Date.now()) / 1000));
+    const card = !ms.length ? '' : isLive()
+      ? `<div class="livecard on"><div class="lc"><span class="live"><i class="dot blink"></i>You're live</span><p class="fine">Matches who are here can knock on you. Leaving the app takes you offline.</p></div>
+          <div class="lr"><span class="timecode" id="livecd">${fmtClock(left)}</span><button class="btn ghost-night small fit" data-act="goOffline">Go offline</button></div></div>`
+      : `<div class="livecard"><div class="lc"><b>Be here for ${LIVE_MINS} minutes</b><p class="fine">Go live and matches who are here can knock on you. Leaving the app takes you offline.</p></div>
+          <button class="btn rec small fit" data-act="goLive">Go live</button></div>`;
     return `<section class="screen">
-      <header class="topline"><h2>Matches</h2></header>
+      <div class="intro"><h2>Matches</h2><p class="fine">Conversations are live and one at a time. Messages show once, and before you talk again you're both asked what you remember.</p></div>
+      ${card}
       ${ms.length ? `<div class="list">${ms.map(row).join('')}</div>`
         : `<div class="empty">${I('chat', 30)}<b>No matches yet.</b><span>Like an answer in Discover. If they like you back, they appear here.</span></div>`}
-      ${pending.length ? `<p class="eyebrow">Likes sent</p><div class="list">${pending.map(p => `<div class="item static">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span>Waiting to hear back</span></span></div>`).join('')}</div>` : ''}
+      ${pending.length ? `<p class="eyebrow">Likes sent</p><div class="list">${pending.map(p => `<div class="item static">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span>${S.liked[p.id].said ? `You said: ${esc(S.liked[p.id].said)}` : 'Waiting to hear back'}</span></span></div>`).join('')}</div>` : ''}
     </section>`;
   },
 
-  chat(){
-    const p = person(chatId), c = S.chats[chatId];
-    return `<section class="screen chat">
-      <header class="chathead">
-        <button class="iconbtn" data-act="go" data-to="matches" aria-label="Back to matches">${I('back')}</button>
-        ${avatar(p)}
-        <span class="txt"><b>${esc(p.name)}</b><span>Example profile, scripted replies</span></span>
-        <button class="iconbtn" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('more')}</button>
-      </header>
-      <div class="msgs" id="msgs">${c.msgs.map(msgHtml).join('')}</div>
-      <div class="composer">
-        <button class="nowbtn" data-act="now" aria-label="Right-now check-in"><i class="dot"></i>Now</button>
-        <textarea class="cinput" id="msg" rows="1" placeholder="Message. No pasting." maxlength="500" autocomplete="off" aria-label="Message"></textarea>
-        <button class="sendbtn" data-act="send" aria-label="Send">${I('send', 20)}</button>
-      </div>
+  talk(){
+    if (T.phase === 'ended') return endedHtml();
+    const p = T.p, mineTurn = T.phase === 'opening' || T.phase === 'mine';
+    const bar = `<div class="talkbar">${avatar(p)}
+      <div class="who2"><b>${esc(p.name)}</b><span class="live"><i class="dot blink"></i>Live · <span id="elapsed">${fmtClock(Math.floor((Date.now() - T.start) / 1000))}</span></span></div>
+      <button class="iconbtn" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('flag', 20)}</button>
+      <button class="btn ghost-night small fit" data-act="talkEnd">${T.endArmed ? 'Tap again to end' : 'End'}</button>
+    </div>`;
+    if (T.phase === 'knock') return `<section class="screen talk">${bar}
+      <div class="knock"><span class="ring"><img src="${avatarSrc(p)}" alt=""></span><h2>Knocking…</h2>
+        <p class="lede">Live conversations only happen when you're both here, one at a time.</p></div>
     </section>`;
+    if (T.phase === 'recall') {
+      const q = T.recallQs[T.ri], done = T.picked != null;
+      return `<section class="screen talk">${bar}
+        <div class="stage">
+          <div class="opening">
+            <div class="recallhead"><p class="eyebrow hot">${I('spark', 14)}Remember last time? · ${T.ri + 1} of ${T.recallQs.length}</p><span class="timecode" id="recallclock">${fmtClock(RECALL_SECS)}</span></div>
+            <h2 class="qtext">${esc(q.q)}</h2>
+          </div>
+          <div class="choices">${q.opts.map((o, i) => `<button class="choice ${done && o === q.right ? 'right' : ''} ${done && i === T.picked && o !== q.right ? 'wrong' : ''}" data-act="recallPick" data-i="${i}" ${done ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>
+          <p class="fine">${done ? (T.picked < 0 ? "Time's up." : q.opts[T.picked] === q.right ? 'You remembered.' : "Not quite. The green one is what was said.") : `You both answer this before you talk again. ${esc(p.name)} is doing the same about you right now.`}</p>
+        </div>
+      </section>`;
+    }
+    if (T.phase === 'recalled') {
+      const them = T.theirScore, n = T.recallQs.length;
+      const about = them === n && T.recall.yours ? `Including that you said “${esc(T.recall.yours)}”.` : them === n ? 'Everything.' : 'One thing slipped.';
+      return `<section class="screen talk">${bar}
+        <div class="stage">
+          <p class="eyebrow">Before you talk again</p>
+          <h1>You remembered ${T.score} of ${n}.</h1>
+          <div class="words"><div class="word"><span class="eyebrow">${esc(p.name)} remembered ${them} of ${n}</span><p>${about}</p></div></div>
+          <p class="lede">You're both caught up. It opens with a new question.</p>
+        </div>
+        <button class="btn rec" data-act="recallGo">Start talking</button>
+      </section>`;
+    }
+    return `<section class="screen talk">${bar}<div class="stage" id="stage">${stageHtml()}</div>${turnHtml()}</section>`;
   },
 
   me(){
@@ -1087,6 +1265,7 @@ const VIEWS = {
       ${m.photo
         ? `<figure class="portrait"><img src="${m.photo}" alt="Your live photo, date-stamped"><figcaption><b>${esc(m.name)}, ${m.age}</b><span>${esc(m.city)}</span></figcaption></figure>`
         : `<div class="nophoto">${I('camera', 34)}<p><b>No live photo yet</b>Others see your profile marked as having no live photo.</p></div><div class="who"><h2>${esc(m.name)}, ${m.age}</h2><p>${esc(m.city)}</p></div>`}
+      ${focusFact(S.focus.stayed, S.focus.total)}
       ${m.answers.map(a => answerCard(a)).join('')}
       <div class="opts">
         <button class="opt card" data-act="freshQ"><span class="oi">${I('shuffle')}</span><span><b>Answer a fresh question</b><small>Random, and hidden until its clock starts</small></span></button>
@@ -1098,22 +1277,63 @@ const VIEWS = {
   }
 };
 
-function msgHtml(m, i){
-  if (m.from === 'sys') return m.kind === 'note'
-    ? `<div class="msg sys note">${esc(m.text)}</div>`
-    : `<div class="msg sys"><span class="eyebrow">Opening question</span><b>${esc(m.text)}</b></div>`;
-  if (m.kind === 'photo') {
-    const src = m.src || stampedPortrait(person(chatId), m.at);
-    return `<div class="msg ${m.from} media"><img src="${src}" alt="Right-now photo, date-stamped"><span class="cap">Right now · ${fmtTime(m.at)}</span></div>`;
-  }
-  if (m.kind === 'voice') return `<div class="msg ${m.from} media"><audio controls src="${m.src}"></audio><span class="cap">Right now · ${fmtTime(m.at)}</span></div>`;
-  if (m.kind === 'ask') {
-    const who = `<b>${esc(person(chatId).name)} asked for a right-now check-in.</b>`;
-    if (m.state === 'open') return `<div class="msg them ask"><p>${who} A live photo or a short voice note, taken on the spot. It's up to you.</p>
-      <div class="row"><button class="btn rec small" data-act="askYes">Send one</button><button class="btn secondary small" data-act="askNo" data-i="${i}">Not now</button></div></div>`;
-    return `<div class="msg them ask"><p>${who} ${m.state === 'done' ? 'You sent one.' : 'You said not now. Nothing changes.'}</p></div>`;
-  }
-  return `<div class="msg ${m.from}">${esc(m.text)}</div>`;
+function stageHtml(){
+  const p = T.p;
+  if (T.phase === 'opening') return `<div class="opening">
+      <p class="eyebrow hot">${I('spark', 14)}Opening question · you both answer</p>
+      <h2 class="qtext">${esc(T.q)}</h2>
+      <p class="fine">${esc(p.name)}'s answer shows once you've sent yours.</p></div>`;
+  return (T.mine ? saidHtml(T.mine) : '') + (T.theirs
+    ? `<div class="theirs">${T.theirs.deal
+        ? `<p class="eyebrow hot">${I('spark', 14)}${esc(p.name)} dealt you a question</p>`
+        : `<p class="eyebrow">${esc(p.name)} · seen once, gone when you reply</p>`}<p class="msgtext ${T.theirs.deal ? 'deal' : ''}" id="theirs">${esc(T.theirs.shown)}</p></div>`
+    : `<div class="theirs"><p class="eyebrow">${esc(p.name)} is typing</p><span class="typing" aria-hidden="true"><i></i><i></i><i></i></span></div>`);
+}
+// The reply box stays the same element for the whole conversation, so typing and a phone's keyboard survive every turn.
+function turnHtml(){
+  const mine = T.phase === 'opening' || T.phase === 'mine', name = esc(T.p.name);
+  return `<div class="turn">
+    <div class="turnhead"><span class="eyebrow" id="turnlabel">${mine ? 'Your turn' : `${name}'s turn · stay here`}</span><span class="timecode" id="turnclock">${fmtClock(TURN)}</span></div>
+    <div class="bar" id="turnbar"><i id="turnfill"></i></div>
+    <textarea class="answerbox turnbox" id="say" placeholder="Say it as it comes. Whatever you've typed sends itself at 0:00." autocomplete="off" maxlength="500" aria-label="Your message"></textarea>
+    <div class="turnrow"><button class="nowbtn" id="nowbtn" data-act="now" aria-label="Send a right-now photo or voice note" ${T.phase === 'mine' ? '' : 'hidden'}><i class="dot"></i>Now</button><button class="btn light" id="sendbtn" data-act="talkSend" ${mine ? '' : 'disabled'}>${mine ? 'Send' : `${name}'s turn`}</button></div>
+  </div>`;
+}
+// Update a running conversation in place instead of re-rendering the screen.
+function paintTalk(){
+  const stage = $('#stage'), say = $('#say');
+  if (view !== 'talk' || !talking() || !stage || !say || sheet || $('.sheet') || !['opening', 'their', 'mine'].includes(T.phase)) { render(); return; }
+  stage.innerHTML = stageHtml();
+  const mine = T.phase === 'opening' || T.phase === 'mine', name = T.p.name;
+  $('#turnlabel').textContent = mine ? 'Your turn' : `${name}'s turn · stay here`;
+  const send = $('#sendbtn'); send.disabled = !mine; send.textContent = mine ? 'Send' : `${name}'s turn`;
+  $('#nowbtn').hidden = T.phase !== 'mine';
+  const end = $('[data-act=talkEnd]'); if (end) end.textContent = T.endArmed ? 'Tap again to end' : 'End';
+  if (say.value !== (T.text || '')) say.value = T.text || '';
+  if (mine) talkTick();
+  else { const c = $('#turnclock'); c.textContent = fmtClock(TURN); c.classList.remove('low'); $('#turnfill').style.transform = ''; $('#turnbar').classList.remove('low'); }
+}
+function saidHtml(m){
+  if (m.kind === 'photo') return `<div class="said"><span class="lbl">You sent a right-now photo</span><img src="${m.src}" alt="Your right-now photo"></div>`;
+  if (m.kind === 'voice') return `<div class="said"><span class="lbl">You sent a 10-second voice note</span></div>`;
+  return `<div class="said"><span class="lbl">You said</span>${esc(m.text)}</div>`;
+}
+function endedHtml(){
+  const name = T.p.name;
+  const [head, line] = {
+    they: [`${name} had to go.`, "That was the whole conversation. Talk again when you're both here."],
+    you: ['You ended it.', "Talk again when you're both here."],
+    left: ['You left, so it ended.', `Live conversations need full focus. ${name} was told you stepped away.`],
+    quiet: ['You went quiet, so it ended.', 'Your clock ran out with nothing said.']
+  }[T.reason] || ['Conversation over.', ''];
+  return `<section class="screen">
+    <p class="eyebrow">Conversation over</p>
+    <h1>${esc(head)}</h1>
+    <p class="lede">${esc(line)}</p>
+    <div class="stats"><div><b>${fmtClock(T.secs)}</b><span>talked</span></div><div><b>${T.msgs}</b><span>messages</span></div></div>
+    <p class="fine">There's no history to scroll back to. Next time, you'll both be asked what you remember from today.</p>
+    <button class="btn light push" data-act="talkDone">Back to matches</button>
+  </section>`;
 }
 
 /* ---------- render ---------- */
@@ -1124,55 +1344,61 @@ const AFTER = {
     const ans = $('#ans');
     if (!ans) return;
     guard(ans, () => { Q.pasteTries++; persistLive(); });
+    let prev = ans.value;
     ans.addEventListener('input', () => {
+      // keep how it was typed, not just what was typed
+      if (Q.part === 'main' && ans.value !== prev && Q.keys.length < 1500) Q.keys.push([Date.now() - Q.start, ...diffText(prev, ans.value)]);
+      prev = ans.value;
       Q.text = ans.value;
       $('#chars').textContent = `${ans.value.length} characters`;
       persistLive();
     });
     ans.focus();
   },
-  chat(){
-    const msg = $('#msg');
-    if (draft && draft.id === chatId) msg.value = draft.text;
-    draft = null;
-    guard(msg);
-    msg.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ACT.send(); } });
-    const box = $('#msgs'), toEnd = () => { box.scrollTop = box.scrollHeight; };
-    toEnd();
-    // photos decode after the first layout; keep the newest message in view once they do
-    box.querySelectorAll('img').forEach(img => { if (!img.complete) img.addEventListener('load', toEnd, { once:true }); });
+  talk(){
+    const say = $('#say');
+    if (!say) return;
+    say.value = T.text || '';
+    guard(say);
+    say.addEventListener('input', () => { if (T) T.text = say.value; });
+    say.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); talkSend(false); } });
+    talkTick();
+    if (!sheet) { say.focus(); say.setSelectionRange(say.value.length, say.value.length); }
   }
 };
+function afterSheet(){
+  if (!sheet || sheet.type !== 'like') return;
+  const box = $('#likesay');
+  box.value = sheet.text || '';
+  guard(box);
+  box.addEventListener('input', () => { if (sheet) sheet.text = box.value; });
+  box.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); likeSend(false); } });
+  likeTick();
+  box.focus();
+}
 const themeColor = document.querySelector('meta[name="theme-color"]');
 
 function render(){
   if (view !== 'photo') stopCam();
+  const changed = view !== lastView;
   const tabs = TABS.includes(view), tone = NIGHT.includes(view) ? 'night' : 'day';
+  REPLAYS = [];
   app.innerHTML = VIEWS[view]() + (tabs ? tabbar() : '') + (sheet ? sheetHtml() : '');
   app.dataset.view = view; app.dataset.tone = tone; document.body.dataset.tone = tone;
   if (tabs) app.dataset.tabs = '1'; else delete app.dataset.tabs;
   const screen = app.querySelector('.screen');
-  if (screen && view !== lastView) screen.classList.add('enter');
+  if (screen && changed) screen.classList.add('enter');
   lastView = view;
   themeColor.content = getComputedStyle(document.documentElement).getPropertyValue(tone === 'night' ? '--night' : '--paper').trim();
   if (AFTER[view]) AFTER[view]();
-  if (view !== 'chat') window.scrollTo(0, 0);
+  afterSheet();
+  if (view === 'talk' && talking()) window.scrollTo(0, document.documentElement.scrollHeight);
+  else if (changed || (view === 'talk' && T && T.phase === 'ended')) window.scrollTo(0, 0);
 }
-function keepDraft(){ const b = $('#msg'); if (b && chatId) draft = { id:chatId, text:b.value }; }
 function go(to){
-  if (V) endNote(true);
-  if (view === 'chat') keepDraft();
   view = to; sheet = null;
   if (to !== 'me') resetArmed = false;
   render();
-}
-// Re-render without losing a half-typed chat message.
-function redraw(){
-  const box = $('#msg'), typing = !!box && document.activeElement === box;
-  keepDraft();
-  render();
-  const next = $('#msg');
-  if (typing && next && !sheet) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
 }
 
 /* ---------- camera ---------- */
@@ -1196,8 +1422,8 @@ function stopCam(){
 function snap(){
   const v = $('#vid');
   if (!P || P.shot || !v || !v.videoWidth) return;
-  const chat = P.from === 'chat';
-  const W = chat ? 540 : 720, H = chat ? 675 : 900, c = document.createElement('canvas');
+  const live = P.from === 'live';
+  const W = live ? 540 : 720, H = live ? 675 : 900, c = document.createElement('canvas');
   c.width = W; c.height = H;
   const ctx = c.getContext('2d');
   const scale = Math.max(W / v.videoWidth, H / v.videoHeight);
@@ -1207,13 +1433,12 @@ function snap(){
   ctx.restore();
   const at = Date.now();
   drawStamp(ctx, at, W, H);   // burned into the pixels, so it travels with the photo
-  const shot = c.toDataURL('image/jpeg', chat ? 0.72 : 0.82);
+  const shot = c.toDataURL('image/jpeg', live ? 0.72 : 0.82);
   stopCam();
-  if (chat) {
-    const id = chatId;
+  if (live) {
     P = null;
-    if (sendNow(id, { from:'me', kind:'photo', src:shot, at })) toast(`Sent to ${person(id).name}.`);
-    go('chat');
+    if (T && T.phase === 'mine') { T.capturing = false; view = 'talk'; sendMine({ kind:'photo', src:shot }); }
+    else go(T ? 'talk' : 'matches');
     return;
   }
   S.me.photo = shot; S.me.photoAt = at;
@@ -1224,7 +1449,7 @@ function snap(){
 }
 
 /* ---------- audio ---------- */
-// One-take recorder, shared by spoken answers and chat voice notes.
+// One-take recorder, shared by spoken answers and voice notes.
 async function recStart(){
   const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
   try {
@@ -1251,17 +1476,16 @@ function recStop(r){
   });
 }
 
-/* ---------- questions ---------- */
+/* ---------- profile questions ---------- */
 function askQuestion(opts){
-  Q = Object.assign({ phase:'ready', part:'main', q:'', twistQ:'', limit:45, twistLimit:15, mode:'text', left:false, pasteTries:0, text:'', busy:false }, opts);
+  Q = Object.assign({ phase:'ready', part:'main', q:'', twistQ:'', limit:45, twistLimit:15, mode:'text', left:false, pasteTries:0, text:'', keys:[], busy:false }, opts);
   view = 'question'; render();
 }
 function curLimit(){ return Q.part === 'twist' ? Q.twistLimit : Q.limit; }
 function persistLive(){
   if (!Q || Q.phase !== 'live') return;
-  saveLive({ ctx:Q.ctx, matchId:Q.matchId || null, openIdx: Q.openIdx == null ? null : Q.openIdx, q:Q.q, twistQ:Q.twistQ,
-    mode:Q.mode, limit:Q.limit, twistLimit:Q.twistLimit, part:Q.part, start:Q.start, main:Q.main || null,
-    text:Q.text, left:Q.left, pasteTries:Q.pasteTries });
+  saveLive({ ctx:Q.ctx, q:Q.q, twistQ:Q.twistQ, mode:Q.mode, limit:Q.limit, twistLimit:Q.twistLimit, part:Q.part, start:Q.start,
+    main:Q.main || null, text:Q.text, left:Q.left, pasteTries:Q.pasteTries, keys:Q.keys });
 }
 async function qStart(){
   if (!Q || Q.phase !== 'ready' || Q.busy) return;
@@ -1275,7 +1499,7 @@ async function qStart(){
     try { Q.vr = await recStart(); }
     catch (e) { Q.mode = 'text'; toast("The microphone isn't available. Type this one instead."); }
   }
-  Q.phase = 'live'; Q.part = 'main'; Q.start = Date.now(); Q.text = ''; Q.busy = false;
+  Q.phase = 'live'; Q.part = 'main'; Q.start = Date.now(); Q.text = ''; Q.keys = []; Q.busy = false;
   persistLive();
   render();
   Q.timer = setInterval(tick, 100);
@@ -1312,27 +1536,21 @@ async function finishQuestion(timedOut){
   const main = Q.part === 'twist' ? Q.main : part, follow = Q.part === 'twist' ? part : null;
   const audio = Q.mode === 'voice' && Q.vr ? await recStop(Q.vr) : '';
   const rec = { q:Q.q, mode:Q.mode, text:main.text, audio, secs:main.secs, limit:main.limit, timedOut:main.timedOut,
-    left:Q.left, pasteTries:Q.pasteTries, at:Date.now(),
+    left:Q.left, pasteTries:Q.pasteTries, at:Date.now(), keys: Q.mode === 'text' && main.text ? Q.keys : null,
     twist: follow ? { q:Q.twistQ, text:follow.text, secs:follow.secs, limit:follow.limit, timedOut:follow.timedOut } : null };
-  commit(Q.ctx, Q.matchId, Q.openIdx, rec);
+  commit(Q.ctx, rec);
   clearLive();
   Q.record = rec; Q.phase = 'locked';
   render();
 }
 // Store an answer the moment it locks, so there is nothing to go back to.
-function commit(ctx, id, openIdx, rec){
-  if (ctx === 'onboard' && S.me) {
+function commit(ctx, rec){
+  if (!S.me) return;
+  if (ctx === 'onboard') {
     S.me.answers.push(rec);
     if (S.me.plan && S.me.answers.length >= S.me.plan.ids.length) S.me.ready = true;
-  } else if (ctx === 'fresh' && S.me) {
+  } else if (ctx === 'fresh') {
     S.me.answers.unshift(rec);
-  } else if (ctx === 'opening' && person(id)) {
-    const p = person(id), o = p.openers[openIdx] || p.openers[0];
-    S.chats[id] = { ri:0, msgs:[
-      { from:'sys', text:rec.q },
-      { from:'me', text: rec.text || (rec.cut ? '(left before answering)' : rec.timedOut ? '(no answer before the clock ran out)' : '(no answer)') },
-      { from:'them', text:o.a }
-    ]};
   }
   save();
 }
@@ -1344,9 +1562,9 @@ function finalizePending(L){
   const inTwist = L.part === 'twist' && L.main;
   const main = inTwist ? L.main : part, follow = inTwist ? part : null;
   const rec = { q:L.q, mode:L.mode, text:main.text, audio:'', secs:main.secs, limit:main.limit, timedOut:main.timedOut,
-    left:true, cut:true, pasteTries:L.pasteTries || 0, at:now,
+    left:true, cut:true, pasteTries:L.pasteTries || 0, at:now, keys: L.mode === 'text' && main.text && L.keys && L.keys.length ? L.keys : null,
     twist: follow ? { q:L.twistQ, text:follow.text, secs:follow.secs, limit:follow.limit, timedOut:follow.timedOut } : null };
-  commit(L.ctx, L.matchId, L.openIdx, rec);
+  commit(L.ctx, rec);
   clearLive();
   return rec;
 }
@@ -1357,8 +1575,7 @@ function nextOnboardQuestion(){
 }
 function nextLabel(){
   if (Q.ctx === 'onboard') return S.me.ready ? 'See who is nearby' : `Go to question ${S.me.answers.length + 1}`;
-  if (Q.ctx === 'fresh') return 'Back to my profile';
-  return 'Open the chat';
+  return 'Back to my profile';
 }
 function onLeave(){
   if (Q && Q.phase === 'live' && !Q.left) {
@@ -1367,48 +1584,292 @@ function onLeave(){
     const f = $('#leftflag'); if (f) f.hidden = false;
   }
 }
-document.addEventListener('visibilitychange', () => { if (document.hidden) onLeave(); });
-window.addEventListener('blur', onLeave);
 
-/* ---------- chat ---------- */
-function scriptedReply(id){
-  const c = S.chats[id], p = person(id);
-  if (!c || !p.replies || c.ri >= p.replies.length) return;
-  setTimeout(() => {
-    if (!S.chats[id] || S.blocked[id]) return;
-    const m = { from:'them', text:p.replies[c.ri++] };
-    c.msgs.push(m);
-    // After their second reply, the match asks for a check-in once. It can be declined.
-    const ask = c.ri === 2 && !c.msgs.some(x => x.kind === 'ask');
-    if (ask) c.msgs.push({ from:'them', kind:'ask', state:'open' });
-    save();
-    if (view === 'chat' && chatId === id) {
-      if (ask) { redraw(); return; }
-      const box = $('#msgs');
-      box.insertAdjacentHTML('beforeend', msgHtml(m));
-      box.scrollTop = box.scrollHeight;
-    }
+/* ---------- likes need your words ---------- */
+function likeTick(){
+  if (!sheet || sheet.type !== 'like') return;
+  const left = Math.max(0, LIKE_SECS - (Date.now() - sheet.start) / 1000);
+  const el = $('#likeclock');
+  if (el) { el.textContent = fmtClock(Math.ceil(left)); el.classList.toggle('low', left <= 5); }
+  if (left <= 0) likeSend(true);
+}
+function closeLike(){ clearInterval(likeTimer); likeTimer = null; sheet = null; }
+function likeSend(timedOut){
+  if (!sheet || sheet.type !== 'like') return;
+  const box = $('#likesay'), said = (box ? box.value : sheet.text || '').trim();
+  if (!said) {
+    if (!timedOut) { toast('Say why first. No words, no like.'); return; }
+    closeLike(); render(); toast('Nothing said, so no like was sent.');
+    return;
+  }
+  const { id, i } = sheet;
+  closeLike();
+  const p = person(id);
+  S.liked[id] = { i, at:Date.now(), said };
+  if (p.back) { S.matches.unshift(id); save(); matchId = id; go('matched'); }
+  else { save(); lastView = ''; render(); toast(`Like sent to ${p.name}, with your words.`); }
+}
+
+/* ---------- being here ---------- */
+// You're live for a set time, and only while the app is open. Matches who are here can knock on you.
+function goLive(silent){
+  liveUntil = Date.now() + LIVE_MINS * 60000;
+  knockedThisSession = false;
+  clearInterval(liveTick);
+  liveTick = setInterval(() => {
+    const left = Math.max(0, Math.round((liveUntil - Date.now()) / 1000));
+    const el = $('#livecd'); if (el) el.textContent = fmtClock(left);
+    if (left <= 0) { goOffline(); if (TABS.includes(view)) toast("You're offline now. Go live again whenever you're here."); }
+  }, 1000);
+  scheduleKnock(15000 + Math.random() * 15000);
+  if (!silent) { if (TABS.includes(view)) render(); toast(`You're live for ${LIVE_MINS} minutes.`); }
+}
+function goOffline(){
+  const was = liveUntil;
+  liveUntil = 0;
+  clearInterval(liveTick); clearTimeout(knockTimer);
+  if (sheet && sheet.type === 'knock') { clearInterval(knockTick); sheet = null; }
+  if (was && TABS.includes(view)) render();
+}
+function scheduleKnock(ms){
+  clearTimeout(knockTimer);
+  knockTimer = setTimeout(() => {
+    if (!isLive() || knockedThisSession) return;
+    const free = TABS.includes(view) && !sheet && !talking() && !V;
+    const who = S.matches.map(person).filter(p => p && p.here && p.openers && !S.blocked[p.id] && p.id !== lastPartner);
+    if (!who.length) return;
+    if (!free) return scheduleKnock(8000);
+    knockedThisSession = true;
+    sheet = { type:'knock', id:pick(who).id, until:Date.now() + KNOCK_SECS * 1000 };
+    render();
+    clearInterval(knockTick);
+    knockTick = setInterval(() => {
+      if (!sheet || sheet.type !== 'knock') { clearInterval(knockTick); return; }
+      const left = Math.max(0, Math.ceil((sheet.until - Date.now()) / 1000));
+      const el = $('#knockcd'); if (el) el.textContent = left;
+      if (left <= 0) {
+        const name = person(sheet.id).name;
+        clearInterval(knockTick); sheet = null; render();
+        toast(`You missed ${name}'s knock.`);
+      }
+    }, 250);
+  }, ms);
+}
+
+/* ---------- live conversations ---------- */
+// Only when both people are here, one person at a time, taking turns on a clock.
+// Their words show once and vanish when you reply. Leaving ends it. Nothing is saved.
+const talking = () => T && T.phase !== 'ended';
+function saveTalkMarker(){ if (talking()) writeJSON(TALK_KEY, { id:T.id, start:T.start, msgs:T.msgs, at:Date.now() }); }
+function talkStart(id, incoming){
+  const p = person(id);
+  if (!p || !p.openers || !p.here || talking()) return;
+  if (!isLive()) goLive(true);   // starting a conversation means you're here
+  knockedThisSession = true;
+  const rec = talkRec(id);
+  const unused = p.openers.map((_, i) => i).filter(i => !rec.used.includes(i));
+  const openIdx = unused.length ? pick(unused) : Math.floor(Math.random() * p.openers.length);
+  rec.used.push(openIdx); save();
+  T = { id, p, start:Date.now(), phase: incoming ? 'opening' : 'knock', incoming:!!incoming, openIdx, q:p.openers[openIdx].q,
+    theirs:null, mine:null, text:'', msgs:0, step:0, endArmed:false, capturing:false,
+    // talked before? then you both answer two quick questions about last time
+    recall:rec.recall || null, recallQs: rec.recall ? makeRecall(p, rec.recall) : null, ri:0, picked:null, score:0,
+    theirLines:[], dealtQ:null, yourOpen:null };
+  saveTalkMarker();
+  sheet = null; view = 'talk';
+  let beat = 0;
+  T.clock = setInterval(() => {
+    const el = $('#elapsed'); if (el && T) el.textContent = fmtClock(Math.floor((Date.now() - T.start) / 1000));
+    if (++beat % 10 === 0) saveTalkMarker();
+  }, 500);
+  if (incoming) { afterJoin(); return; }
+  render();
+  T.knockTimer = setTimeout(() => { if (T && T.phase === 'knock') afterJoin(); }, 1700);
+}
+function afterJoin(){
+  if (T.recallQs) startRecallQ();
+  else { T.phase = 'opening'; beginTurn(); }
+}
+function beginTurn(){
+  T.turnStart = Date.now(); T.endArmed = false;
+  paintTalk();
+  clearInterval(T.timer);
+  T.timer = setInterval(talkTick, 100);
+}
+
+/* ---------- remember last time ---------- */
+// Before talking to someone again, you both answer two quick questions about your last conversation.
+// Messages show once and there's no history, so only real attention gets these right.
+function makeRecall(p, R){
+  const others = PEOPLE.filter(x => x.id !== p.id && x.openers);
+  const options = (right, pool) => shuffle([right, ...shuffle([...new Set(pool)].filter(x => x && x !== right)).slice(0, 2)]);
+  const qs = [{ q:`Last time you were asked “${R.q}” What did ${p.name} say?`, right:R.theirs, opts:options(R.theirs, others.flatMap(x => x.openers.map(o => o.a))) }];
+  if (R.dealt) qs.push({ q:`${p.name} dealt you a question last time. Which one?`, right:R.dealt, opts:options(R.dealt, POOL.map(textOf)) });
+  else if (R.line) qs.push({ q:`Which of these did ${p.name} say to you?`, right:R.line, opts:options(R.line, others.flatMap(x => x.replies)) });
+  return qs;
+}
+function startRecallQ(){
+  T.phase = 'recall'; T.qAt = Date.now(); T.picked = null;
+  render();
+  clearInterval(T.timer);
+  T.timer = setInterval(recallTick, 100);
+}
+function recallTick(){
+  if (!talking() || T.phase !== 'recall' || T.picked != null) return;
+  const left = Math.max(0, RECALL_SECS - (Date.now() - T.qAt) / 1000);
+  const el = $('#recallclock'); if (el) { el.textContent = fmtClock(Math.ceil(left)); el.classList.toggle('low', left <= 3); }
+  if (left <= 0) recallPick(-1);
+}
+function recallPick(i){
+  if (!talking() || T.phase !== 'recall' || T.picked != null) return;
+  clearInterval(T.timer);
+  const q = T.recallQs[T.ri];
+  T.picked = i;
+  if (i >= 0 && q.opts[i] === q.right) T.score++;
+  render();
+  T.recallNext = setTimeout(() => {
+    if (!talking() || T.phase !== 'recall') return;
+    T.ri++;
+    if (T.ri < T.recallQs.length) { startRecallQ(); return; }
+    // the example people remember about as well as they stay focused
+    const p = T.p;
+    T.theirScore = Math.min(T.recallQs.length, p.focus[0] / p.focus[1] >= 0.85 ? 2 : 1);
+    T.phase = 'recalled'; render();
   }, 1500);
 }
-// Add a right-now photo or voice note to a chat. Any open request counts as answered.
-function sendNow(id, m){
-  const c = S.chats[id];
-  const open = c.msgs.filter(x => x.kind === 'ask' && x.state === 'open');
-  c.msgs.push(m); open.forEach(x => { x.state = 'done'; });
-  if (save()) return true;
-  c.msgs.pop(); open.forEach(x => { x.state = 'open'; });
-  return false;
+// Keep only what next time's recall questions need. None of it can be read back.
+function keepForRecall(rec){
+  if (T.msgs < 2) return;   // their opening answer was never seen
+  rec.recall = { q:T.q, theirs:T.p.openers[T.openIdx].a, dealt:T.dealtQ || null, line:T.theirLines.length ? pick(T.theirLines) : null, yours:T.yourOpen || null };
 }
-async function endNote(send){
+function talkTick(){
+  if (!T || (T.phase !== 'opening' && T.phase !== 'mine')) return;
+  const left = Math.max(0, TURN - (Date.now() - T.turnStart) / 1000);
+  const clock = $('#turnclock'), fill = $('#turnfill'), bar = $('#turnbar');
+  if (clock) { clock.textContent = fmtClock(Math.ceil(left)); clock.classList.toggle('low', left <= 10); }
+  if (fill) { fill.style.transform = `scaleX(${left / TURN})`; bar.classList.toggle('low', left <= 10); }
+  if (left > 0) return;
+  // time: whatever you've got goes, whether you're typing, recording or holding the camera
+  if (V) { endVoice(true); return; }
+  if (view === 'photo') { stopCam(); P = null; T.capturing = false; view = 'talk'; }
+  talkSend(true);
+}
+function talkSend(timedOut){
+  if (!T || (T.phase !== 'opening' && T.phase !== 'mine')) return;
+  const box = view === 'talk' ? $('#say') : null;
+  const text = (box ? box.value : T.text || '').trim();
+  if (!text) {
+    if (timedOut) talkEnd('quiet');
+    else toast('Say something first. When the clock runs out, an empty turn ends the conversation.');
+    return;
+  }
+  sendMine({ kind:'text', text });
+}
+function sendMine(m){
+  clearInterval(T.timer);
+  const afterOpening = T.phase === 'opening';
+  if (afterOpening) T.yourOpen = m.kind === 'text' ? m.text : m.kind === 'photo' ? 'a right-now photo' : 'a voice note';
+  T.mine = m; T.theirs = null; T.text = ''; T.msgs++; sheet = null;
+  T.phase = 'their'; saveTalkMarker();
+  view = 'talk'; paintTalk();
+  theirTurn(afterOpening);
+}
+// Their side of the conversation: an answer, a line, a dealt question from the bank, a reaction, and so on.
+function theirTurn(afterOpening){
+  const p = T.p;
+  let text, last = false, deal = false, k = -1;
+  if (afterOpening) text = p.openers[T.openIdx].a;
+  else {
+    k = T.step++;
+    if (k === 0) text = p.replies[0];
+    else if (k === 1) { const it = draw(pick(['A', 'E', 'C', 'D'])); markSeen(it.id); save(); text = textOf(it); deal = true; }
+    else if (k === 2) text = p.react;
+    else if (k - 2 < p.replies.length) text = p.replies[k - 2];
+    else { text = p.bye; last = true; }
+  }
+  // their own words are worth remembering next time; the dealt question and a quick reaction aren't
+  const line = !afterOpening && !deal && !last && k !== 2;
+  T.wait = setTimeout(() => {
+    if (!talking() || T.phase !== 'their') return;
+    // their words arrive as they type them; yours are gone once they reply
+    T.mine = null; T.theirs = { shown:'', deal };
+    paintTalk();
+    let i = 0;
+    T.typer = setInterval(() => {
+      if (!talking()) return;
+      i = Math.min(text.length, i + (Math.random() < 0.35 ? 2 : 1));
+      T.theirs.shown = text.slice(0, i);
+      const el = $('#theirs'); if (el) el.textContent = T.theirs.shown;
+      if (i < text.length) return;
+      clearInterval(T.typer);
+      T.msgs++; saveTalkMarker();
+      if (deal) T.dealtQ = text;
+      if (line) T.theirLines.push(text);
+      if (last) { T.byeDone = true; T.closeT = setTimeout(() => talkEnd('they'), 2800); }
+      else { T.phase = 'mine'; beginTurn(); }
+    }, 32);
+  }, 1300 + Math.random() * 1500);
+}
+function stopTalkTimers(){
+  [T.timer, T.typer, T.clock].forEach(clearInterval);
+  [T.wait, T.knockTimer, T.closeT, T.blurTimer, T.disarm, T.recallNext].forEach(clearTimeout);
+  if (V) { clearInterval(V.timer); recStop(V); V = null; }
+}
+function talkEnd(reason){
+  if (!talking()) return;
+  if (reason === 'left' && T.byeDone) reason = 'they';   // they'd already said goodbye
+  stopTalkTimers();
+  if (view === 'photo') { stopCam(); P = null; }
+  const secs = Math.max(1, Math.round((Date.now() - T.start) / 1000));
+  const rec = talkRec(T.id);
+  rec.n++; rec.last = { at:Date.now(), secs, msgs:T.msgs, reason };
+  keepForRecall(rec);
+  // staying till the end means finishing it yourself or seeing them off, not leaving or going quiet
+  S.focus.total++; if (reason === 'they' || reason === 'you') S.focus.stayed++;
+  save(); drop(TALK_KEY);
+  // still live: another match can knock later, just not the person you've just talked to
+  lastPartner = T.id;
+  if (isLive()) { knockedThisSession = false; scheduleKnock(25000 + Math.random() * 20000); }
+  // if the page is closing, show why on the next visit
+  if (reason === 'left') writeJSON(ENDED_KEY, { id:T.id, reason, secs, msgs:T.msgs });
+  T = { id:T.id, p:T.p, phase:'ended', reason, secs, msgs:T.msgs };
+  sheet = null; view = 'talk'; render();
+}
+// Stop a conversation without the summary screen (used when you report or block).
+function talkAbort(){
+  if (!talking()) return;
+  stopTalkTimers();
+  const rec = talkRec(T.id);
+  rec.n++; rec.last = { at:Date.now(), secs:Math.max(1, Math.round((Date.now() - T.start) / 1000)), msgs:T.msgs, reason:'you' };
+  S.focus.total++; S.focus.stayed++;
+  save(); drop(TALK_KEY); T = null;
+}
+async function endVoice(send){
   if (!V || V.ending) return;
-  V.ending = true;
-  clearInterval(V.timer);
+  V.ending = true; clearInterval(V.timer);
   const v = V, src = await recStop(v);
   V = null;
   if (sheet && sheet.type === 'voice') sheet = null;
-  if (send && src && S.chats[v.id]) sendNow(v.id, { from:'me', kind:'voice', src, at:Date.now() });
-  if (view === 'chat') redraw();
+  if (send && src && T && T.phase === 'mine') sendMine({ kind:'voice', src });
+  else if (view === 'talk') render();
 }
+
+/* ---------- full focus ---------- */
+// Switching away ends a live conversation and takes you offline. A brief loss of focus gets
+// a few seconds' grace, and a camera or microphone permission prompt doesn't count.
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  onLeave();
+  if (talking()) talkEnd('left');
+  goOffline();
+});
+window.addEventListener('blur', () => {
+  onLeave();
+  if (!talking() || T.capturing) return;
+  clearTimeout(T.blurTimer);
+  T.blurTimer = setTimeout(() => { if (talking() && !T.capturing && !document.hasFocus()) talkEnd('left'); }, 4000);
+});
+window.addEventListener('focus', () => { if (T) clearTimeout(T.blurTimer); });
 
 /* ---------- actions ---------- */
 const ACT = {
@@ -1432,6 +1893,7 @@ const ACT = {
   snap(){ snap(); },
   camRetry(){ P.error = false; render(); },
   photoNext(){ const from = P.from; P = null; go(from === 'onboard' ? 'qintro' : 'me'); },
+  photoBack(){ stopCam(); P = null; if (T) T.capturing = false; go(talking() ? 'talk' : 'matches'); },
   skipPhoto(){ S.me.photoDone = true; save(); P = null; go('qintro'); },
   newPhoto(){
     if (photoWait()) return;
@@ -1448,13 +1910,12 @@ const ACT = {
   qStart(){ qStart(); },
   qLock(){ finishQuestion(false); },
   qNext(){
-    const ctx = Q.ctx, id = Q.matchId;
+    const ctx = Q.ctx;
     Q = null;
     if (ctx === 'onboard') { if (S.me.ready) go('discover'); else nextOnboardQuestion(); }
-    else if (ctx === 'fresh') go('me');
-    else { chatId = id; go('chat'); }
+    else go('me');
   },
-  qLater(){ const ctx = Q.ctx; Q = null; go(ctx === 'fresh' ? 'me' : 'matches'); },
+  qLater(){ Q = null; go('me'); },
 
   freshQ(){
     const it = draw(pick(['A', 'A', 'D', 'E', 'E', 'C']));
@@ -1462,92 +1923,110 @@ const ACT = {
     askQuestion({ ctx:'fresh', itemId:it.id, withTwist: Math.random() < 0.5, mode:'text', limit:45, label:'Fresh question' });
   },
 
-  like(t){
-    const p = person(t.dataset.id);
-    S.liked[p.id] = { i:Number(t.dataset.i), at:Date.now() };
-    if (p.back) { S.matches.unshift(p.id); save(); matchId = p.id; go('matched'); }
-    else { save(); render(); toast(`Like sent to ${p.name}.`); }
+  replay(t){
+    const r = REPLAYS[Number(t.dataset.r)], card = t.closest('.answer'), el = card && card.querySelector('.atext');
+    if (!r || !el || card.dataset.playing) return;
+    card.dataset.playing = '1'; t.disabled = true;
+    // real rhythm at 1.5x, with very long pauses shortened so it stays watchable
+    const times = []; let acc = 0, prev = 0;
+    r.keys.forEach(([at]) => { acc += Math.min(Math.max(0, at - prev), 1800) / 1.5; prev = at; times.push(acc); });
+    let text = '', i = 0;
+    const t0 = performance.now();
+    el.classList.add('typing-now'); el.textContent = '';
+    const step = () => {
+      if (!el.isConnected) return;
+      const now = performance.now() - t0;
+      while (i < r.keys.length && times[i] <= now) { const [, s, d, ins] = r.keys[i]; text = text.slice(0, s) + ins + text.slice(s + d); i++; }
+      el.textContent = text;
+      if (i < r.keys.length) { requestAnimationFrame(step); return; }
+      el.classList.remove('typing-now'); el.textContent = r.text;
+      delete card.dataset.playing; t.disabled = false;
+    };
+    requestAnimationFrame(step);
   },
-  pass(t){ S.passed[t.dataset.id] = true; save(); render(); },
-  unpass(){ S.passed = {}; save(); render(); },
 
-  report(t){ sheet = { type:'report', id:t.dataset.id }; redraw(); },
-  closeSheet(){ sheet = null; redraw(); },
+  like(t){
+    sheet = { type:'like', id:t.dataset.id, i:Number(t.dataset.i), start:Date.now(), text:'' };
+    render();
+    clearInterval(likeTimer); likeTimer = setInterval(likeTick, 100);
+  },
+  likeSend(){ likeSend(false); },
+  pass(t){ S.passed[t.dataset.id] = true; save(); lastView = ''; render(); },
+
+  report(t){ if (sheet && sheet.type === 'like') closeLike(); sheet = { type:'report', id:t.dataset.id }; render(); },
+  closeSheet(){ if (sheet && sheet.type === 'like') closeLike(); sheet = null; render(); },
   doReport(){ blockNow('Reported and blocked. Thank you.'); },
   doBlock(){ blockNow('Blocked.'); },
 
-  openMatch(t){
-    const id = t.dataset.id;
-    if (S.chats[id]) { chatId = id; go('chat'); } else { matchId = id; go('matched'); }
-  },
-  opening(){
-    const p = person(matchId), idx = Math.floor(Math.random() * p.openers.length);
-    askQuestion({ ctx:'opening', matchId, openIdx:idx, q:p.openers[idx].q, mode:'text', limit:30, label:`Opening question with ${p.name}` });
-  },
-  send(){
-    const box = $('#msg'), text = box.value.trim();
-    if (!text) return;
-    const m = { from:'me', text };
-    S.chats[chatId].msgs.push(m); save();
-    const list = $('#msgs');
-    list.insertAdjacentHTML('beforeend', msgHtml(m));
-    list.scrollTop = list.scrollHeight;
-    box.value = ''; box.dispatchEvent(new Event('input'));
-    box.focus();
-    scriptedReply(chatId);
-  },
+  goLive(){ goLive(false); },
+  goOffline(){ goOffline(); toast("You're offline."); },
+  knockJoin(){ const id = sheet.id; clearInterval(knockTick); sheet = null; talkStart(id, true); },
+  knockSkip(){ const name = person(sheet.id).name; clearInterval(knockTick); sheet = null; render(); toast(`You let ${name}'s knock pass.`); },
 
-  now(){ sheet = { type:'now', id:chatId }; redraw(); },
-  askYes(){ sheet = { type:'now', id:chatId, reply:true }; redraw(); },
-  askNo(t){
-    const m = S.chats[chatId].msgs[Number(t.dataset.i)];
-    if (m && m.kind === 'ask') { m.state = 'declined'; save(); }
-    redraw();
+  talk(t){ talkStart(t.dataset.id); },
+  talkSend(){ talkSend(false); },
+  talkEnd(t){
+    if (!talking()) return;
+    if (!T.endArmed) {
+      // change only the button, so a half-typed message isn't disturbed
+      T.endArmed = true; t.textContent = 'Tap again to end';
+      clearTimeout(T.disarm);
+      T.disarm = setTimeout(() => { if (talking() && T.endArmed) { T.endArmed = false; const b = $('[data-act=talkEnd]'); if (b) b.textContent = 'End'; } }, 3000);
+      return;
+    }
+    talkEnd('you');
   },
-  nowPhoto(){ P = { from:'chat', shot:'', error:false, stream:null }; go('photo'); },
+  talkDone(){ T = null; drop(ENDED_KEY); go('matches'); },
+  recallPick(t){ recallPick(Number(t.dataset.i)); },
+  recallGo(){ if (talking() && T.phase === 'recalled') { T.phase = 'opening'; beginTurn(); } },
+  now(){ if (talking() && T.phase === 'mine') { sheet = { type:'now' }; render(); } },
+  nowPhoto(){
+    if (!talking() || T.phase !== 'mine') return;
+    T.capturing = true;
+    P = { from:'live', shot:'', error:false, stream:null };
+    go('photo');
+  },
   async nowVoice(){
-    if (V || voiceStarting) return;
-    const id = chatId;
+    if (V || voiceStarting || !talking() || T.phase !== 'mine') return;
+    const convo = T, turnAt = T.turnStart;
+    voiceStarting = true; convo.capturing = true;
     let r;
-    voiceStarting = true;
     try { r = await recStart(); }
-    catch (e) { sheet = null; redraw(); toast("The microphone isn't available in this window."); return; }
+    catch (e) { convo.capturing = false; if (T === convo) { sheet = null; render(); } toast("The microphone isn't available here."); return; }
     finally { voiceStarting = false; }
-    V = Object.assign(r, { id, t0:Date.now(), ending:false });
-    sheet = { type:'voice', id }; redraw();
+    convo.capturing = false;
+    // the permission prompt can outlast the turn: never start recording into a later turn
+    if (T !== convo || !talking() || T.phase !== 'mine' || T.turnStart !== turnAt) {
+      recStop(r);
+      if (T === convo && view === 'talk') { sheet = null; render(); }
+      return;
+    }
+    V = Object.assign(r, { t0:Date.now(), ending:false });
+    sheet = { type:'voice' }; render();
     V.timer = setInterval(() => {
       if (!V) return;
       const left = Math.max(0, 10 - (Date.now() - V.t0) / 1000);
       const el = $('#vsecs'); if (el) el.textContent = fmtClock(Math.ceil(left));
-      if (left <= 0) endNote(true);
+      if (left <= 0) endVoice(true);
     }, 100);
   },
-  noteSend(){ endNote(true); },
-  nowAsk(){
-    const id = chatId, c = S.chats[id], p = person(id);
-    c.askedAt = Date.now();
-    c.msgs.push({ from:'sys', kind:'note', text:`You asked ${p.name} for a right-now check-in. They can say no.` });
-    save(); sheet = null; redraw();
-    setTimeout(() => {
-      if (!S.chats[id] || S.blocked[id]) return;
-      S.chats[id].msgs.push({ from:'them', kind:'photo', src:'', at:Date.now() });
-      save();
-      if (view === 'chat' && chatId === id) redraw();
-    }, 2000);
-  },
+  noteSend(){ endVoice(true); },
 
   reset(){
     if (!resetArmed) { resetArmed = true; render(); return; }
     try { localStorage.removeItem(KEY); } catch (e) {}
-    clearLive();
-    S = fresh(); resetArmed = false; Q = P = null; matchId = chatId = null; draft = null;
+    clearLive(); drop(TALK_KEY); drop(ENDED_KEY);
+    goOffline(); closeLike();
+    S = fresh(); resetArmed = false; Q = P = T = null; matchId = null;
     go('welcome');
   }
 };
 function blockNow(msg){
-  S.blocked[sheet.id] = true; save();
+  const id = sheet.id;
+  S.blocked[id] = true; save();
   sheet = null;
-  go(view === 'chat' ? 'matches' : view);
+  if (T && T.id === id) { talkAbort(); T = null; go('matches'); }
+  else { lastView = ''; go(view); }
   toast(msg);
 }
 
@@ -1571,12 +2050,35 @@ function boot(){
   const L = loadLive();
   if (L && L.start && S.me) {
     const rec = finalizePending(L);
-    Q = { phase:'locked', ctx:L.ctx, matchId:L.matchId, record:rec, cut:true };
+    Q = { phase:'locked', ctx:L.ctx, record:rec, cut:true };
     view = 'question';
     render();
     return;
   }
   if (L) clearLive();
+  // A live conversation that was open when the page closed counts as leaving it.
+  const M = readJSON(TALK_KEY);
+  drop(TALK_KEY);
+  if (M && S.me && person(M.id)) {
+    const secs = Math.max(1, Math.round(((M.at || M.start) - M.start) / 1000));
+    const rec = talkRec(M.id);
+    rec.n++; rec.last = { at:Date.now(), secs, msgs:M.msgs || 0, reason:'left' };
+    S.focus.total++;
+    save();
+    T = { id:M.id, p:person(M.id), phase:'ended', reason:'left', secs, msgs:M.msgs || 0 };
+    view = 'talk';
+    render();
+    return;
+  }
+  // a conversation that ended because the page was closed: say so once
+  const E = readJSON(ENDED_KEY);
+  drop(ENDED_KEY);
+  if (E && S.me && person(E.id)) {
+    T = { id:E.id, p:person(E.id), phase:'ended', reason:E.reason, secs:E.secs, msgs:E.msgs };
+    view = 'talk';
+    render();
+    return;
+  }
   resume();
 }
 boot();
