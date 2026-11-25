@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Offhand</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#17132C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23E5383B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Offhand: a night out shot on a disposable camera. Deep indigo night, flash-white paper,
+   REC red for anything live, and an amber seven-segment date stamp burned into every photo.
+   Layout: one phone-width column; on a computer it stands in the middle of a night backdrop. */
+:root{
+  --paper:#F4F2F7; --card:#FFFFFF; --ink:#1C1830; --ink-2:#4B4662; --muted:#7B758E; --line:#E4E0EB; --line-2:#CDC8DA;
+  --rec:#E5383B; --rec-soft:#FDE7E7; --stamp:#FF9F2E; --warn:#93560B; --warn-soft:#FFF1DC;
+  --night:#17132C; --night-2:#231E3F; --night-3:#2F2952; --night-line:#3B3462; --on-night:#F6F4FB; --on-night-2:#B8B2CD;
+  --backdrop:#0E0B1E;
+  --shadow:0 1px 2px rgba(28,24,48,.06),0 10px 28px rgba(28,24,48,.08);
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:20px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#100D1E; --card:#1B172F; --ink:#F3F1F9; --ink-2:#CBC5DC; --muted:#9791AE; --line:#2A2544; --line-2:#3B355B;
+    --rec:#FF5256; --rec-soft:#3A1B26; --warn:#F2B75E; --warn-soft:#382A15;
+    --night:#0C0A18; --night-2:#18142D; --night-3:#231E40; --night-line:#322C54;
+    --backdrop:#06050D;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;background:var(--paper);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body[data-tone="night"]{background:var(--night)}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rec);outline-offset:3px}
+img{display:block;max-width:100%}
+h1,h2,h3,p{margin:0}
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* the column, and the night backdrop around it on a computer */
+.app{max-width:440px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;background:var(--paper)}
+.app[data-tone="night"]{background:var(--night);color:var(--on-night)}
+.screen{display:flex;flex-direction:column;gap:20px;min-height:100vh;min-height:100dvh;
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.app[data-tabs] .screen{padding-bottom:calc(108px + env(safe-area-inset-bottom,0px))}
+.screen.enter{animation:enter .3s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}}
+.aside{display:none}
+@media (min-width:600px){
+  body,body[data-tone="night"]{background:
+    radial-gradient(480px circle at 10% 16%,rgba(255,159,46,.17),transparent 70%),
+    radial-gradient(560px circle at 92% 26%,rgba(229,56,59,.15),transparent 70%),
+    radial-gradient(520px circle at 80% 90%,rgba(126,110,255,.17),transparent 70%),
+    radial-gradient(420px circle at 16% 86%,rgba(70,200,220,.10),transparent 70%),
+    var(--backdrop);background-attachment:fixed}
+  .app{box-shadow:0 0 0 1px rgba(255,255,255,.06),0 40px 120px rgba(0,0,0,.55)}
+}
+@media (min-width:1120px){
+  .aside{display:flex;flex-direction:column;gap:14px;position:fixed;top:50%;transform:translateY(-50%);left:max(48px,calc(50% - 220px - 400px));width:320px;color:var(--on-night)}
+  .aside .wordmark{font-size:2.4rem}
+  .aside p{color:var(--on-night-2);font-size:1.05rem;line-height:1.5}
+  .aside .eyebrow{color:var(--on-night-2)}
+}
+
+/* type */
+h1,h2{font-family:var(--display);font-stretch:78%;font-weight:800;letter-spacing:-.005em;text-wrap:balance}
+h1{font-size:2.55rem;line-height:.98}
+h2{font-size:1.9rem;line-height:1.02}
+h3{font-size:1.05rem;font-weight:600;line-height:1.3}
+.mega{font-family:var(--display);font-stretch:72%;font-weight:800;font-size:clamp(2.8rem,13.5vw,3.8rem);line-height:.9;text-transform:uppercase;letter-spacing:-.005em}
+.mega em{font-style:normal;color:var(--stamp)}
+.lede{color:var(--ink-2);font-size:1.06rem;line-height:1.5}
+.fine{color:var(--muted);font-size:.85rem;line-height:1.45}
+.eyebrow{display:flex;align-items:center;gap:7px;font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.eyebrow.hot{color:var(--stamp)}
+.app[data-tone="night"] .lede,.app[data-tone="night"] .fine,.app[data-tone="night"] .eyebrow:not(.hot){color:var(--on-night-2)}
+.wordmark{display:inline-flex;align-items:center;gap:9px;font:800 1.45rem/1 var(--display);font-stretch:80%;letter-spacing:-.01em}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--rec);display:inline-block;flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--rec) 22%,transparent)}
+.blink{animation:blink 1.2s steps(2,start) infinite}
+@keyframes blink{50%{opacity:.35}}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.intro{display:flex;flex-direction:column;gap:10px}
+.push{margin-top:auto}
+
+/* buttons */
+.btn{appearance:none;border:0;border-radius:999px;min-height:56px;padding:0 24px;font:600 1.02rem/1.2 var(--body);display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;cursor:pointer;transition:transform .12s ease,background-color .15s ease,opacity .15s ease}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.secondary{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line-2)}
+.btn.ghost{background:transparent;color:var(--ink-2)}
+.btn.danger{color:var(--rec)}
+.btn.rec{background:var(--rec);color:#fff}
+.btn.light{background:var(--on-night);color:#17132C}
+.btn.ghost-night{background:transparent;color:var(--on-night-2);box-shadow:inset 0 0 0 1.5px var(--night-line)}
+.btn.small{min-height:44px;font-size:.95rem;padding:0 18px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px}
+.iconbtn{appearance:none;width:44px;height:44px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:inherit;flex:none}
+.iconbtn:hover{background:color-mix(in srgb,currentColor 9%,transparent)}
+.iconbtn.outline{width:56px;height:56px;box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink-2)}
+
+/* step progress */
+.stephead{display:flex;flex-direction:column;gap:12px}
+.steps{display:flex;gap:6px}
+.steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--ink)}
+.app[data-tone="night"] .steps i{background:var(--night-line)}
+.app[data-tone="night"] .steps i.on{background:var(--on-night)}
+
+/* rules lists */
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.rules li{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.rules .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.app[data-tone="night"] .rules .ico{background:var(--night-2);color:var(--on-night);box-shadow:none}
+.rules b{display:block;font-weight:600;line-height:1.3}
+.rules span{display:block;color:var(--ink-2);font-size:.93rem;line-height:1.45;margin-top:2px}
+.app[data-tone="night"] .rules span{color:var(--on-night-2)}
+
+/* welcome */
+.hero-art{position:relative;height:300px}
+.hero-art .shot{position:absolute;left:2%;top:4px;width:56%;margin:0;border-radius:16px;overflow:hidden;transform:rotate(-5deg);box-shadow:0 0 0 6px #fff,0 24px 50px rgba(0,0,0,.5)}
+.hero-art .shot img{aspect-ratio:4/5;object-fit:cover;width:100%}
+.hero-art .bubble{position:absolute;right:0;bottom:6px;width:66%;transform:rotate(3deg);background:#fff;color:#1C1830;border-radius:18px;padding:14px 16px;box-shadow:0 24px 50px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
+.bubble .bq{font-size:.78rem;color:#7B758E;line-height:1.3}
+.bubble .ba{font-size:.98rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.bubble .chip{background:#F4F2F7;color:#4B4662}
+.hero-art .rectag{position:absolute;right:6%;top:14px;display:inline-flex;align-items:center;gap:7px;font:700 .72rem/1 var(--mono);letter-spacing:.14em;color:var(--on-night);background:rgba(255,255,255,.08);padding:8px 11px;border-radius:999px}
+
+/* forms */
+.form{display:flex;flex-direction:column;gap:18px}
+.two{display:grid;grid-template-columns:1fr 2fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.field>span,.field legend{font-weight:600;font-size:.9rem;color:var(--ink-2);padding:0}
+fieldset.field{border:0;margin:0;padding:0}
+.input{border:1.5px solid var(--line);background:var(--card);border-radius:14px;height:54px;padding:0 16px;width:100%;font-size:1.02rem;color:var(--ink)}
+.input:focus{border-color:var(--ink);outline:none}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label,.modes label{cursor:pointer}
+.seg input,.modes input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;border-radius:999px;padding:11px 17px;font-weight:500;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.seg input:checked+span{background:var(--ink);color:var(--paper);box-shadow:none}
+.seg input:focus-visible+span,.modes input:focus-visible+.mc{outline:2px solid var(--rec);outline-offset:2px}
+.err{color:var(--rec);font-weight:500;min-height:1.4em;font-size:.92rem}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modes .mc{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line);height:100%}
+.modes .mc .ic{margin-bottom:4px}
+.modes input:checked+.mc{box-shadow:inset 0 0 0 2px var(--ink)}
+.modes .mc b{font-weight:600}
+.modes .mc small{color:var(--muted);font-size:.83rem;line-height:1.35}
+
+/* photos */
+.cam{position:relative;aspect-ratio:4/5;max-height:52vh;border-radius:24px;overflow:hidden;background:#05040A;max-width:100%}
+.cam video,.cam img{width:100%;height:100%;object-fit:cover;display:block}
+.cam video{transform:scaleX(-1)}
+.tag{position:absolute;top:14px;left:14px;z-index:1;display:inline-flex;align-items:center;gap:7px;background:rgba(10,8,22,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font:500 .66rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-radius:999px}
+.camerr{position:absolute;inset:0;display:grid;place-items:center;padding:28px;text-align:center;color:var(--on-night-2);font-size:.95rem;line-height:1.5}
+.camerr b{display:block;color:var(--on-night);font-size:1.05rem;margin-bottom:8px}
+.shutterwrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.shutter{appearance:none;width:80px;height:80px;border-radius:50%;border:0;background:transparent;box-shadow:inset 0 0 0 4px #fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.shutter::after{content:"";width:64px;height:64px;border-radius:50%;background:#fff;transition:transform .12s ease}
+.shutter:active::after{transform:scale(.88)}
+.shutter.send::after{background:var(--rec)}
+.shutter:disabled{opacity:.35;cursor:wait}
+.hint{font:500 .72rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--on-night-2)}
+.portrait{position:relative;margin:0;border-radius:24px;overflow:hidden;aspect-ratio:4/5;background:var(--night-2);max-width:100%}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.portrait::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 46% at 0% 100%,rgba(10,8,22,.82),rgba(10,8,22,.35) 55%,transparent 100%);pointer-events:none}
+.portrait figcaption{position:absolute;left:20px;bottom:18px;z-index:1;color:#fff;display:flex;flex-direction:column;gap:3px}
+.portrait figcaption b{font:800 2.2rem/1 var(--display);font-stretch:78%}
+.portrait figcaption span{font-size:.92rem;color:rgba(255,255,255,.82)}
+.nophoto{aspect-ratio:4/5;border-radius:24px;border:1.5px dashed var(--line-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;text-align:center;color:var(--muted)}
+.nophoto b{display:block;color:var(--ink);margin-bottom:4px}
+.who{display:flex;flex-direction:column;gap:2px}
+.who p{color:var(--muted)}
+
+/* answers */
+.answer{background:var(--card);color:var(--ink);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.aq{color:var(--muted);font-size:.9rem;font-weight:500;line-height:1.35}
+.atext{font-size:1.16rem;line-height:1.42;overflow-wrap:anywhere}
+.atext.none{color:var(--muted);font-style:italic;font-size:1rem}
+.answer audio{width:100%;height:40px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.chip{font-size:.74rem;font-weight:500;padding:5px 10px;border-radius:999px;background:var(--paper);color:var(--ink-2);white-space:nowrap}
+.chip.tc{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.72rem}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.solid{background:var(--card);box-shadow:var(--shadow)}
+.twist{margin-top:4px;padding-top:14px;border-top:1px dashed var(--line-2);display:flex;flex-direction:column;gap:8px}
+.twist .atext{font-size:1.05rem}
+.likebtn{align-self:flex-end;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--rec-soft);color:var(--rec);border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;margin-top:2px;transition:background-color .15s ease,color .15s ease}
+.likebtn .ic,.heart .ic{fill:currentColor;stroke:none}
+.likebtn:hover{background:var(--rec);color:#fff}
+.deckbar{display:flex;gap:10px;align-items:center}
+
+/* questions */
+.qbar{display:flex;align-items:center;justify-content:space-between;min-height:56px}
+.live{display:inline-flex;align-items:center;gap:8px;font:700 .76rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--rec)}
+.timecode{font:800 3.4rem/1 var(--display);font-stretch:72%;font-variant-numeric:tabular-nums;color:var(--on-night)}
+.timecode.low{color:var(--rec)}
+.bar{height:4px;border-radius:2px;background:var(--night-line);overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:var(--on-night);transform-origin:left}
+.bar.low i{background:var(--rec)}
+.qtext{font-size:2.15rem;line-height:1.03}
+.answerbox{background:var(--night-2);color:var(--on-night);border:0;border-radius:var(--r);padding:16px 18px;min-height:170px;width:100%;resize:none;font-size:1.15rem;line-height:1.45}
+.answerbox::placeholder{color:var(--on-night-2);opacity:.75}
+.answerbox:focus{outline:2px solid var(--night-line);outline-offset:0}
+.qmeta{display:flex;justify-content:space-between;gap:10px;color:var(--on-night-2);font-size:.84rem}
+.qmeta .flag{color:var(--stamp);font-weight:600;text-align:right}
+.voice{display:flex;flex-direction:column;align-items:center;gap:16px;padding:30px 16px;border-radius:var(--r);background:var(--night-2);text-align:center;color:var(--on-night-2)}
+.voice b{color:var(--on-night)}
+.wave{display:flex;align-items:center;gap:5px;height:56px}
+.wave i{width:6px;height:14px;border-radius:3px;background:var(--rec);animation:wave 1s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:-.75s}.wave i:nth-child(3){animation-delay:-.3s}.wave i:nth-child(4){animation-delay:-.9s}
+.wave i:nth-child(5){animation-delay:-.5s}.wave i:nth-child(6){animation-delay:-.15s}.wave i:nth-child(7){animation-delay:-.6s}
+@keyframes wave{50%{height:52px}}
+.recwrap{display:flex;flex-direction:column;align-items:center;gap:16px;margin:auto 0}
+.recbtn{appearance:none;width:124px;height:124px;border-radius:50%;border:0;background:var(--rec);color:#fff;font:700 .82rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 0 0 7px var(--night),0 0 0 9px rgba(255,255,255,.2),0 20px 50px rgba(229,56,59,.45);transition:transform .12s ease}
+.recbtn:active{transform:scale(.95)}
+.recbtn:disabled{opacity:.6;cursor:wait}
+
+/* match */
+.pair{position:relative;height:270px}
+.pair figure{position:absolute;top:0;width:50%;aspect-ratio:4/5;margin:0;border-radius:16px;overflow:hidden;background:var(--night-2);box-shadow:0 0 0 5px #fff,0 24px 50px rgba(0,0,0,.5);display:grid;place-items:center}
+.pair figure img{width:100%;height:100%;object-fit:cover}
+.pair .p1{left:4%;top:14px;transform:rotate(-6deg)}
+.pair .p2{right:4%;transform:rotate(5deg)}
+.pair .initial{font:800 4.5rem/1 var(--display);font-stretch:78%;color:var(--on-night-2)}
+.heart{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:var(--rec);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px var(--night),0 12px 30px rgba(229,56,59,.5)}
+
+/* lists */
+.list{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;align-items:center;gap:14px;padding:12px 14px;border:0;background:var(--card);color:var(--ink);border-radius:var(--r);box-shadow:var(--shadow);width:100%;text-align:left;cursor:pointer;min-width:0}
+.item.static{cursor:default}
+.item .txt{min-width:0;flex:1}
+.item .txt b{display:block;font-weight:600}
+.item .txt span{display:block;color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item>.ic{color:var(--muted)}
+.av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--night-2)}
+.av img{width:100%;height:100%;object-fit:cover}
+.empty{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:30px 20px;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+.empty b{color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{appearance:none;display:flex;align-items:center;gap:14px;padding:14px;border:0;border-radius:18px;background:var(--paper);text-align:left;cursor:pointer;color:var(--ink);width:100%}
+.opt:hover:not(:disabled){background:var(--line)}
+.opt.card{background:var(--card);box-shadow:var(--shadow)}
+.opt.card:hover:not(:disabled){background:var(--card);box-shadow:var(--shadow),inset 0 0 0 1.5px var(--line-2)}
+.opt .oi{width:42px;height:42px;border-radius:13px;background:var(--card);display:grid;place-items:center;flex:none}
+.opt.card .oi{background:var(--paper)}
+.opt b{display:block;font-weight:600}
+.opt small{display:block;color:var(--muted);font-size:.84rem;line-height:1.35}
+.opt:disabled{opacity:.55;cursor:not-allowed}
+
+/* tab bar */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;display:flex;z-index:5;
+  background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -1px 0 var(--line);
+  padding:8px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabbar button{flex:1;appearance:none;border:0;background:none;padding:4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.74rem;font-weight:600;color:var(--muted);cursor:pointer;position:relative}
+.tabbar .tb{width:58px;height:32px;border-radius:16px;display:grid;place-items:center;transition:background-color .15s ease}
+.tabbar button[aria-current="page"]{color:var(--ink)}
+.tabbar button[aria-current="page"] .tb{background:var(--paper)}
+.tabbar .n{position:absolute;top:0;left:calc(50% + 10px);font:700 .62rem/1 var(--mono);background:var(--rec);color:#fff;border-radius:999px;padding:3px 6px}
+
+/* chat */
+.screen.chat{padding:0;gap:0;height:100vh;height:100dvh;min-height:0}
+.chathead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:var(--card);box-shadow:0 1px 0 var(--line);position:relative;z-index:1}
+.chathead .av{width:42px;height:42px}
+.chathead .txt{flex:1;min-width:0}
+.chathead .txt b{display:block;font-weight:600;line-height:1.2}
+.chathead .txt span{display:block;color:var(--muted);font-size:.8rem}
+.msgs{flex:1;overflow-y:auto;padding:20px 14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.msg{max-width:80%;padding:10px 15px;border-radius:21px;overflow-wrap:anywhere;line-height:1.4}
+.msg.me{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:6px}
+.msg.them{align-self:flex-start;background:var(--card);color:var(--ink);box-shadow:var(--shadow);border-bottom-left-radius:6px}
+.msg.sys{align-self:center;max-width:92%;text-align:center;padding:4px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.msg.sys b{font:800 1.35rem/1.1 var(--display);font-stretch:80%;color:var(--ink);text-wrap:balance}
+.msg.note{color:var(--muted);font-size:.86rem;padding:4px 10px}
+.msg.media{padding:6px;width:min(240px,78%)}
+.msg.media img{border-radius:16px;width:100%}
+.msg.media audio{width:100%;display:block}
+.msg .cap{display:block;font:500 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:9px 8px 5px;opacity:.75}
+.msg.ask{max-width:100%;align-self:stretch;display:flex;flex-direction:column;gap:14px;border-radius:21px;padding:16px}
+.composer{display:flex;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -1px 0 var(--line)}
+.cinput{flex:1;min-width:0;height:46px;border:0;border-radius:23px;background:var(--paper);color:var(--ink);padding:12px 16px;resize:none;font-size:1rem;line-height:1.35}
+.cinput::placeholder{color:var(--muted)}
+.cinput:focus{outline:2px solid var(--line-2);outline-offset:0}
+.nowbtn{appearance:none;flex:none;height:46px;display:inline-flex;align-items:center;gap:8px;border:0;background:var(--paper);color:var(--ink);border-radius:23px;padding:0 15px;font-weight:600;cursor:pointer}
+.sendbtn{appearance:none;flex:none;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);display:grid;place-items:center;cursor:pointer}
+
+/* sheet + toast */
+.scrim{position:fixed;inset:0;background:rgba(8,6,20,.55);z-index:20;animation:fade .15s ease}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:440px;background:var(--card);color:var(--ink);border-radius:28px 28px 0 0;z-index:21;display:flex;flex-direction:column;gap:12px;animation:rise .22s cubic-bezier(.2,.7,.2,1);
+  padding:10px max(20px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line-2);align-self:center;margin-bottom:6px}
+.sheet h3{font:800 1.5rem/1.05 var(--display);font-stretch:80%}
+.sheet .recline{display:flex;align-items:center;justify-content:space-between}
+.sheet .timecode{color:var(--ink);font-size:2.6rem}
+@keyframes rise{from{transform:translate(-50%,24px);opacity:0}}
+@keyframes fade{from{opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--night-3);color:var(--on-night);padding:11px 18px;border-radius:999px;font-weight:500;font-size:.92rem;z-index:30;max-width:calc(100% - 40px);text-align:center;box-shadow:0 14px 34px rgba(0,0,0,.3)}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<aside class="aside" aria-hidden="true">
+  <span class="wordmark"><i class="dot blink"></i>offhand</span>
+  <p>One take. No edits. Actually you.</p>
+  <p class="eyebrow">Prototype. Best on your phone.</p>
+</aside>
+<div id="app" class="app"></div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+'use strict';
+
+/* ---------- example people ---------- */
+// Clearly labelled as examples in the UI; their answers and chat replies are scripted.
+// No two of them share a question, and none of their questions can ever be dealt to you.
+const PEOPLE = [
+  { id:'maya', name:'Maya', age:27, g:'woman', km:3, hue:8, days:2, back:true,
+    answers:[
+      { q:"What's the last thing that made you laugh out loud?", a:"my neighbour's dog has started waiting for the lift like a person. just sits there facing the doors. i lost it this morning", secs:31 },
+      { q:"What's a small thing you're weirdly competitive about?", a:"loading the dishwasher. there is a correct way and i will reload it after you, sorry", secs:22,
+        tw:{ q:"When did that last get out of hand?", a:"last week. my flatmate filmed me doing it", secs:9 } },
+      { q:"Describe your ideal Sunday before the clock runs out.", a:"wake up late, long breakfast, no plans till at least 2, then a walk somewhere with trees and then i ran out of ti", secs:45, timedOut:true }
+    ],
+    openers:[
+      { q:"What's the last thing you ate that was actually great?", a:"a toastie from the place near my office. cheese and chilli, nothing fancy. thought about it all afternoon" },
+      { q:"What's a sound you love?", a:"the kettle clicking off. means tea is happening" },
+      { q:"What did you nearly buy this week?", a:"a second plant to keep the plant i can't keep alive company" }
+    ],
+    replies:["haha ok. you type faster than me", "fair. what are you doing this weekend?", "nice. i'm free saturday afternoon if you want to get a coffee"] },
+  { id:'kabir', name:'Kabir', age:30, g:'man', km:5, hue:205, days:1, back:true,
+    answers:[
+      { q:"What's a job you'd be terrible at?", a:"air traffic control. i get stressed when two people talk to me at once in a kitchen", secs:19 },
+      { q:"What's in your fridge right now that you can't explain?", a:"a jar of something my aunt made. no label. it's been 4 months. too scared to open it, too scared to throw it", secs:28,
+        tw:{ q:"How long has it been in there, honestly?", a:"four months. maybe five", secs:6 } },
+      { q:"What do you do when you can't sleep?", a:"reorganise my bookshelf in my head. by colour then by height then i give up and", secs:45, timedOut:true }
+    ],
+    openers:[
+      { q:"What's a tiny thing that improved your week?", a:"found a tenner in a coat i hadn't worn since march. bought the good bread" },
+      { q:"What's the last thing you got told off for?", a:"leaving a teaspoon in the sink at work. by someone i don't manage, or know" },
+      { q:"What's your most used emoji, and is it a cry for help?", a:"the upside down smiley. yes" }
+    ],
+    replies:["ok that's better than mine", "so what do you do when you're not answering questions against a clock", "ha. want to carry this on over a walk sometime?"] },
+  { id:'sara', name:'Sara', age:26, g:'woman', km:2, hue:330, days:4, back:true,
+    answers:[
+      { q:"What's your go-to order when nobody's judging?", a:"fries and a milkshake and i dip them. yes. i know", secs:12,
+        tw:{ q:"Where's the best place to get it?", a:"the place by the cinema. obviously", secs:8 } },
+      { q:"What did you believe as a kid that turned out to be wrong?", a:"that teachers lived at school. saw mine at a supermarket once and it genuinely shook me", secs:24 },
+      { q:"What are you looking forward to this month?", a:"my sister is visiting and we're doing a 10k together. she'll beat me. it's fine", secs:20 }
+    ],
+    openers:[
+      { q:"What's something you put together badly?", a:"a shelf, last night, one screw missing. it now leans like it's listening to me" },
+      { q:"What's your comfort film?", a:"the princess diaries. i will not be taking questions" },
+      { q:"What's a word you always spell wrong?", a:"necessary. i know the trick. the trick does not help" }
+    ],
+    replies:["honestly same energy", "what's your week looking like?", "ok good. thursday evening? there's a place with decent fries"] },
+  { id:'dev', name:'Dev', age:29, g:'man', km:7, hue:150, days:6, back:true,
+    answers:[
+      { q:"What's a hill you'll die on that doesn't matter at all?", a:"tea goes in before milk. this isn't up for discussion", secs:9 },
+      { q:"What did you do last Saturday, honestly?", a:"slept till 11, watched cricket highlights, told people i went for a run", secs:17 },
+      { q:"What's something you're bad at but enjoy anyway?", a:"Singing is something I find deeply rewarding despite my limited technical ability, as it offers a meaningful outlet for self-expression.", secs:44, left:true }
+    ],
+    openers:[
+      { q:"What's a breakfast you'd queue for?", a:"the bakery round the corner sells out by 9. i have made it there twice" },
+      { q:"What's the last thing you did on autopilot?", a:"drove to my old office. i changed jobs in june" },
+      { q:"What's an opinion you'd defend in front of anyone?", a:"cricket is better on the radio" }
+    ],
+    replies:["that's a strong answer", "are you a morning person then", "right. sunday morning, coffee. i'll set three alarms"] },
+  { id:'nina', name:'Nina', age:31, g:'woman', km:4, hue:265, days:3, back:true,
+    answers:[
+      { q:"What's a place you keep going back to?", a:"there's a second hand bookshop near the station. i have never left in under an hour", secs:38 },
+      { q:"Who's the last person you texted, and what about?", a:"my mum. a photo of a plant asking if it's dead. it is", secs:30 },
+      { q:"What's the worst meal you've ever cooked for someone?", a:"risotto that was somehow both soup and concrete. we didn't last, but not because of that i think", secs:44,
+        tw:{ q:"Did they eat it?", a:"every bite. i still feel bad about it", secs:9 } }
+    ],
+    openers:[
+      { q:"What's something you bought recently that you love?", a:"a proper reading lamp. i feel like a person with their life together" },
+      { q:"What's the last thing you recommended to someone?", a:"a crime novel set on a ferry. they haven't replied, so they're either hooked or furious" },
+      { q:"What's a phrase you say too often?", a:"'right then' before i stand up. i'm 31" }
+    ],
+    replies:["i like that", "what are you reading at the moment?", "ok you should see that bookshop. saturday?"] },
+  { id:'arjun', name:'Arjun', age:28, g:'man', km:1, hue:28, days:1, back:true,
+    answers:[
+      { q:"What's on your phone's home screen, and why?", a:"my dog in a raincoat looking betrayed", secs:8 },
+      { q:"What would your friends say you talk about too much?", a:"bread. i got into sourdough in 2020 and never came back", secs:14,
+        tw:{ q:"Give us ten seconds of it right now.", a:"ok so hydration matters more than the flour and i'll stop", secs:15, timedOut:true } },
+      { q:"What's the first thing you'd do with a surprise day off tomorrow?", a:"", secs:45, timedOut:true }
+    ],
+    openers:[
+      { q:"What's the last thing you fixed yourself?", a:"a dripping tap. watched one video, flooded the bathroom slightly, fixed it" },
+      { q:"What's something you do that your friends find strange?", a:"talk to my dog in full sentences. he gets most of it" },
+      { q:"What did you want to be when you were little?", a:"a bin man. i loved the truck. still do" }
+    ],
+    replies:["ha, respect", "do you want to meet the dog", "good. park on sunday, bring a raincoat just in case"] },
+  { id:'aisha', name:'Aisha', age:25, g:'woman', km:6, hue:180, days:5, back:false,
+    answers:[
+      { q:"What's a song you know every word of, and how did that happen?", a:"an ad jingle for a mattress shop from when i was 8. it never left. i'd sing it but this is text", secs:26 },
+      { q:"What's the nicest thing a stranger has done for you?", a:"someone chased me down a platform with my wallet. wouldn't take anything. i still think about him", secs:29 },
+      { q:"What's a game you take far too seriously?", a:"any board game. i've been asked to leave a game night", secs:9,
+        tw:{ q:"Who asked you to leave?", a:"my cousins. new year. we don't talk about it", secs:7 } }
+    ] },
+  { id:'rohan', name:'Rohan', age:32, g:'man', km:8, hue:95, days:2, back:false,
+    answers:[
+      { q:"What's something you do that makes you feel older than you are?", a:"market at 8 on a sunday, cook something that takes four hours, nap, call my parents, bed by 10. i'm 32 going on 60", secs:33 },
+      { q:"What's something you hated for years and now love?", a:"running. hated it for 30 years. now i'm annoying about it", secs:15,
+        tw:{ q:"What turned it around?", a:"a friend dragged me to a 5k and i didn't die", secs:10 } },
+      { q:"What's a smell that takes you straight back somewhere?", a:"wet concrete after the first rain. school corridors, instantly", secs:18 }
+    ] },
+  { id:'sam', name:'Sam', age:27, g:'nonbinary', km:3, hue:48, days:1, back:true,
+    answers:[
+      { q:"What's the last thing you took a photo of, and why?", a:"a parking sign with 4 contradictory arrows. sent it to the group chat", secs:13 },
+      { q:"What's a job you'd be surprisingly good at?", a:"naming paint colours. i have a notes app full of them", secs:11,
+        tw:{ q:"Name one.", a:"landlord beige", secs:4 } },
+      { q:"What's a rule you had growing up that you now think was right?", a:"no phones at dinner. annoyingly correct", secs:11 }
+    ],
+    openers:[
+      { q:"What's the most useless thing you're good at?", a:"guessing how long is left on a microwave without looking. within 3 seconds" },
+      { q:"What's a word you love the sound of?", a:"kerfuffle. i use it at work and nobody stops me" },
+      { q:"What's the last thing that made you stop and stare?", a:"a pigeon on the bus. it got off at the right stop" }
+    ],
+    replies:["ha ok, noted", "what's the best thing you did this week?", "we should compare notes in person. friday?"] }
+];
+const person = id => PEOPLE.find(p => p.id === id);
+
+/* ---------- question bank ---------- */
+// No AI anywhere. Every question is hand-written or put together from hand-written parts,
+// and each one carries its own hand-written follow-ups for the surprise twist.
+
+// A: "What's something you <verb> <when>?" The third item lists times a verb doesn't suit.
+const WHEN = ['today', 'yesterday', 'this week', 'last weekend', 'this month', 'last year', 'when you were ten', 'at school', 'at your first job', 'on your last trip'];
+const VERBS = [
+  ['got completely wrong', ['How long did it take you to notice?', 'Who caught it?']],
+  ['were secretly proud of', ['Did you tell anyone?', 'Would anyone else have noticed?']],
+  ['changed your mind about', ['What changed it?', 'Who was right all along?']],
+  ['did for the first time', ['Would you do it again?', 'Who talked you into it?']],
+  ['found by accident', ['Did you keep it?', 'What were you actually looking for?']],
+  ['pretended to understand', ['Did anyone find out?', 'Do you understand it now?']],
+  ['were nervous about', ['How did it actually go?', 'Who calmed you down?']],
+  ['said yes to', ['Was it a good idea?', 'What made you say yes?']],
+  ['got a bit obsessed with', ['How long did it last?', 'Who had to hear about it?'], ['today', 'yesterday']],
+  ['spent far too long on', ['Was it worth it?', 'What should you have been doing instead?']],
+  ['learned the hard way', ['How did you find out?', 'Who would you warn about it?']],
+  ["did to make someone's day", ['Did they notice?', 'Who did something like that for you?']],
+  ['lost track of time doing', ['What did you miss because of it?', 'Would you do it again tomorrow?']],
+  ['had a silly argument about', ['Who won?', 'Is it settled now?']],
+  ['were late for', ['What was your excuse?', 'Did anyone notice?']],
+  ['started and never finished', ['What stopped you?', 'Will you ever finish it?'], ['today', 'yesterday']],
+  ['got right on the first try', ['Was it luck?', 'Who saw you do it?']],
+  ['were the only one who enjoyed', ['Who did you drag along?', 'Would you go again?']],
+  ['talked yourself out of', ['Do you regret it?', 'Who tried to talk you into it?']],
+  ['gave away', ['Who got it?', 'Do you miss it?']]
+];
+
+// C: this or that.
+const PAIRS = ['Window seat or aisle seat?', 'Sunrise or sunset?', 'Call or text?', 'Early bird or night owl?', 'Plans or no plans?',
+  'Mountains or the sea?', 'Sweet or salty?', 'Cook at home or eat out?', 'Big group or one good friend?', 'Cats or dogs?',
+  'Books or films?', 'Summer or winter?', 'Road trip or flight?', 'Rain or heat?', 'City or countryside?',
+  'Morning shower or evening shower?', 'Messy desk or tidy desk?', 'Music on or silence?', 'First to arrive or last to leave?', 'Breakfast or dinner?',
+  'Video games or board games?', 'Walking or cycling?', 'Live music or a good playlist?', 'Spicy or mild?', 'Tea or coffee?'];
+const PAIR_FOLLOW = ['Who in your life is the opposite?', 'Has it always been that way?', 'What would make you switch?'];
+
+// D: about this exact moment, so nobody can prepare. Some change with the day and time.
+const NOW = [
+  [t => `It's ${t.day} ${t.part}. What were you doing an hour ago?`, ['Was that the plan?', 'What should you have been doing?']],
+  ['Without moving, name three things you can see right now.', ['Which one has a story behind it?', 'Which one would you get rid of?']],
+  ['What can you hear right now, apart from yourself?', ['Is that normal for this time of day?', 'What would you rather be hearing?']],
+  [t => t.part === 'morning' ? 'What did you have for breakfast, if anything?' : "What's the last thing you ate today?", ['Was it any good?', 'What do you wish it had been?']],
+  [t => `What's still on your to-do list for ${t.part === 'night' ? 'tomorrow' : 'today'}?`, ['Which one do you keep avoiding?', 'Will it all get done?']],
+  ["What did you do today that you'd happily do again tomorrow?", ['What would you skip?', 'Who was part of it?']],
+  ["What's in your pockets or bag right now?", ['Which one would you be lost without?', "What's the oldest thing in there?"]],
+  [t => `What's the first thing you'll do ${t.part === 'morning' ? 'after lunch' : 'tomorrow morning'}?`, ['Are you looking forward to it?', 'What would you do instead if you could?']],
+  ["What's the nearest thing to your left, and why is it there?", ['How long has it been there?', 'Would anyone else know why?']],
+  [t => `What mood are you in ${t.when}, honestly?`, ['What caused it?', 'What would change it?']],
+  ["What's the last message you sent? Describe it, don't quote it.", ['Did they reply?', 'Would you send it again?']],
+  ["What's the weather doing where you are, and does it suit you?", ['What would you do in perfect weather today?', 'Does the weather change your mood?']],
+  [t => `What's the best thing that's happened to you since ${t.day === 'Monday' ? 'the weekend' : 'Monday'}?`, ['Who did you tell?', 'Could it happen again?']]
+];
+
+// E: hand-written one-offs.
+const SOLO = [
+  ['When did you last get properly lost?', ['How did you find your way?', 'Did you ask anyone for help?']],
+  ["What's the last thing you borrowed and never gave back?", ['Do they know you still have it?', 'Will you give it back now?']],
+  ["What's the last compliment you got?", ['Did you believe it?', 'What did you say back?']],
+  ["What's the last show you watched all of in one go?", ['Was the ending worth it?', 'Who would you tell to watch it?']],
+  ["What's the last thing you broke?", ['Did you own up?', 'Could it be fixed?']],
+  ["What's the last thing you queued for?", ['Was it worth the wait?', 'How long did you stand there?']],
+  ["What's the last thing you said sorry for?", ['Did you mean it?', 'Were you actually wrong?']],
+  ["What's a dream you still remember?", ['Who was in it?', 'Did it mean anything?']],
+  ["What's something you threw away and regretted?", ['Could you get it back?', 'Why did you throw it out?']],
+  ["What's a skill you tried to learn and gave up on?", ['How far did you get?', 'Would you try again?']],
+  ["What's the last gift you gave someone?", ['Did they like it?', 'How long did it take you to choose?']],
+  ["What's the last film that got to you?", ['Would you watch it again?', 'Who were you watching it with?']],
+  ["What's a risk you took that paid off?", ['Would you take it again?', 'Who told you not to?']],
+  ["What's something you made with your own hands?", ['Where is it now?', 'Was it meant to look like that?']],
+  ["What's the last new food you tried?", ['Would you have it again?', 'Who talked you into it?']],
+  ['When did you last dance?', ['What was playing?', 'Was anyone watching?']],
+  ["What's the last thing you said you'd start on Monday?", ['Did you?', 'What stopped you?']],
+  ["What's the last thing you changed about your room?", ['Did anyone notice?', 'Was it an improvement?']],
+  ["What's the last live show you went to?", ['Who did you go with?', 'What was the best moment?']],
+  ["What's an argument you let someone else win?", ['Were you actually right?', 'Why did you let it go?']],
+  ["What's a small luxury you'd never give up?", ['How often do you treat yourself?', 'Who got you into it?']],
+  ["What's the strangest thing you've ever eaten?", ['Would you eat it again?', 'Who were you with?']],
+  ["What's a tradition you made up yourself?", ['When did it start?', 'Who else is in on it?']],
+  ["What's a talent nobody would guess you have?", ['How did you find out you had it?', 'Who has seen it?']],
+  ["What's a question you wish people asked you more?", ['Go on then, answer it.', 'Why that one?']],
+  ["What's the best advice you ignored?", ['Who gave it to you?', 'Do you regret ignoring it?']],
+  ["What's a smell you can't stand?", ['Where do you run into it?', 'Has it always bothered you?']],
+  ["What's the worst haircut you've had?", ['Who did it?', 'How long did it take to grow out?']],
+  ["What's something you collect, even by accident?", ['How many do you have?', 'When did it start?']],
+  ['What would your ten-year-old self think of you now?', ['What would surprise them most?', 'What would they want you to change?']],
+  ["What's a place you visited once and still think about?", ['What do you remember most?', 'Who were you with?']],
+  ["What's something everyone loves that you don't get?", ['Have you given it a fair chance?', 'Who have you argued with about it?']],
+  ["What's the most out-of-character thing you've done?", ['Who was most surprised?', 'Would you do it again?']],
+  ["What's the best day you've had this year?", ['What made it so good?', 'Who was there?']],
+  ["What's a job you've done that nobody would expect?", ['What did you learn there?', 'Would you go back?']],
+  ['What do you do in the first ten minutes after you wake up?', ['Has it always been like that?', 'What would you change about it?']],
+  ["What's something you do differently from everyone you know?", ['Who has tried to change your mind?', 'When did you start?']],
+  ["What's a song that changes your mood straight away?", ['When did you first hear it?', 'What mood does it put you in?']],
+  ["What's a hobby you'd pick up if you had the time?", ["What's stopping you, really?", 'Who would you do it with?']],
+  ["What's the most useful thing you own?", ['Where did you get it?', 'What would you do without it?']],
+  ["What's the last thing that surprised you about yourself?", ['When did you notice?', 'Did anyone else notice?']],
+  ["What's something you'll always say yes to?", ['When did you last say yes to it?', 'What would make you say no?']],
+  ["What's a film scene you know by heart?", ['Who do you quote it to?', 'When did you first see it?']],
+  ["What's the most spontaneous thing you've done this year?", ['Would you do it again?', 'Who came with you?']]
+];
+
+const EXAMPLE_QS = new Set(PEOPLE.flatMap(p => [
+  ...p.answers.flatMap(a => a.tw ? [a.q, a.tw.q] : [a.q]),
+  ...(p.openers || []).map(o => o.q)
+]));
+const POOL = [];
+VERBS.forEach(([verb, f, skip], i) => WHEN.forEach((when, j) => {
+  if (!(skip && skip.includes(when))) POOL.push({ id:`a${i}.${j}`, fam:'A', q:`What's something you ${verb} ${when}?`, f });
+}));
+PAIRS.forEach((pair, i) => POOL.push({ id:`c${i}`, fam:'C', q:`${pair} Pick one, and say why.`, f:PAIR_FOLLOW }));
+NOW.forEach(([q, f], i) => POOL.push({ id:`d${i}`, fam:'D', q, f }));
+SOLO.forEach(([q, f], i) => POOL.push({ id:`e${i}`, fam:'E', q, f }));
+// Never deal a question that already appears on someone else's profile.
+for (let i = POOL.length - 1; i >= 0; i--) if (EXAMPLE_QS.has(POOL[i].q)) POOL.splice(i, 1);
+const BY_ID = new Map(POOL.map(it => [it.id, it]));
+
+/* ---------- helpers ---------- */
+const app = document.getElementById('app');
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pick = list => list[Math.floor(Math.random() * list.length)];
+function shuffle(list){
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list;
+}
+const canVoice = !!(navigator.mediaDevices && window.MediaRecorder);
+const TABS = ['discover', 'matches', 'me'];
+const NIGHT = ['welcome', 'photo', 'question', 'matched'];
+const DAY = 86400000, WEEK = 7 * DAY;
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pad = n => String(n).padStart(2, '0');
+const fmtClock = s => `${Math.floor(s / 60)}:${pad(s % 60)}`;
+const fmtTime = ts => { const d = new Date(ts); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fmtDay = ts => { const d = new Date(ts); return `${d.getDate()} ${MON[d.getMonth()]}`; };
+
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+}
+
+/* ---------- icons ---------- */
+const ICONS = {
+  camera:'<path d="M3.5 8.5A1.5 1.5 0 0 1 5 7h2.2l1.6-2.2h6.4L16.8 7H19a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z"/><circle cx="12" cy="13" r="3.6"/>',
+  shuffle:'<path d="M3 7h3.3c2 0 3.3 1 4.4 2.6l2.6 3.8c1.1 1.6 2.4 2.6 4.4 2.6H21"/><path d="M3 17h3.3c1.2 0 2.2-.3 3-1"/><path d="M14.7 8c.8-.6 1.8-1 3-1H21"/><path d="M18.5 4.5 21 7l-2.5 2.5"/><path d="M18.5 13.5 21 16l-2.5 2.5"/>',
+  clock:'<circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.3 1.6"/><path d="M9.5 2.8h5"/>',
+  type:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M14 10h.01M17.5 10h.01M8 14h8"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/>',
+  heart:'<path d="M12 20s-7.5-4.5-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.5-7.5 10-7.5 10z"/>',
+  x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  back:'<path d="M14.5 5.5 8 12l6.5 6.5"/>',
+  chev:'<path d="M9.5 5.5 16 12l-6.5 6.5"/>',
+  more:'<circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>',
+  send:'<path d="M12 19V5.5M6.5 11 12 5.5l5.5 5.5"/>',
+  cards:'<rect x="7" y="3.5" width="12" height="15" rx="2.5"/><path d="M4.5 7v10.5a3 3 0 0 0 3 3h8"/>',
+  chat:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/>',
+  user:'<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.2-3.6 4.1-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>',
+  flag:'<path d="M5.5 21V4M5.5 4.5h11l-2 4 2 4h-11"/>',
+  lock:'<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
+  eyeoff:'<path d="M3.5 3.5l17 17"/><path d="M10.5 5.1A9 9 0 0 1 12 5c5 0 8.4 4.3 9.3 7-.4 1.1-1.1 2.4-2.2 3.6M6.4 6.6C4.6 7.9 3.3 9.8 2.7 12c.9 2.7 4.3 7 9.3 7 1.6 0 3.1-.4 4.4-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  spark:'<path d="M12 3.5c.6 4.4 2.3 6.1 6.5 6.7-4.2.6-5.9 2.3-6.5 6.7-.6-4.4-2.3-6.1-6.5-6.7 4.2-.6 5.9-2.3 6.5-6.7z"/><path d="M18.5 16.5v4M16.5 18.5h4"/>'
+};
+const I = (name, size = 22) => `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+
+/* ---------- date stamp and example portraits ---------- */
+// The amber seven-segment date stamp of a film camera, burned into the pixels of every photo.
+const SEGS = { 0:'abcdef', 1:'bc', 2:'abdeg', 3:'abcdg', 4:'bcfg', 5:'acdfg', 6:'acdefg', 7:'abc', 8:'abcdefg', 9:'abcdfg' };
+function segLayout(text, h){
+  const W = h * 0.52, T = h * 0.13, G = h * 0.035, half = h / 2, v = half - T / 2 - 2 * G, rects = [];
+  let x = 0;
+  for (const ch of text) {
+    if (SEGS[ch]) {
+      const S = {
+        a:[x + T + G, 0, W - 2 * T - 2 * G, T], g:[x + T + G, half - T / 2, W - 2 * T - 2 * G, T], d:[x + T + G, h - T, W - 2 * T - 2 * G, T],
+        f:[x, T / 2 + G, T, v], b:[x + W - T, T / 2 + G, T, v], e:[x, half + G, T, v], c:[x + W - T, half + G, T, v]
+      };
+      for (const s of SEGS[ch]) rects.push(S[s]);
+      x += W + h * 0.2;
+    } else if (ch === ':') { rects.push([x, h * 0.26, T, T], [x, h * 0.62, T, T]); x += T + h * 0.2; }
+    else if (ch === "'") { rects.push([x, 0, T, h * 0.3]); x += T + h * 0.18; }
+    else x += h * 0.34;
+  }
+  return { rects, width:x };
+}
+function stampText(ts){
+  const d = new Date(ts);
+  return `'${String(d.getFullYear()).slice(2)} ${pad(d.getMonth() + 1)} ${pad(d.getDate())}  ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function drawStamp(g, ts, W, H){
+  const h = Math.round(W * 0.042), { rects, width } = segLayout(stampText(ts), h);
+  const x0 = W - width - W * 0.055, y0 = H - h - W * 0.06;
+  g.save();
+  g.setTransform(1, 0, -0.12, 1, x0 + h * 0.12, y0);   // the slight slant of an LED display
+  g.fillStyle = '#FFB04A'; g.shadowColor = 'rgba(255,120,20,1)'; g.shadowBlur = h * 0.6;
+  for (let pass = 0; pass < 2; pass++) for (const [x, y, w, hh] of rects) g.fillRect(x, y, w, hh);
+  g.restore();
+}
+function rng(seed){ let s = (seed >>> 0) || 1; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
+const seedOf = str => [...str].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) >>> 0, 7);
+function grain(o, W, H, r){
+  const t = document.createElement('canvas'); t.width = t.height = 160;
+  const tc = t.getContext('2d'), img = tc.createImageData(160, 160);
+  for (let i = 0; i < img.data.length; i += 4) { const v = r() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 24; }
+  tc.putImageData(img, 0, 0);
+  o.save(); o.globalCompositeOperation = 'overlay'; o.fillStyle = o.createPattern(t, 'repeat'); o.fillRect(0, 0, W, H); o.restore();
+}
+// Example people have no real photos, so each gets a painted, out-of-focus night portrait.
+const BASE = {}, STAMPED = {}, AVATARS = {};
+function basePortrait(p){
+  if (BASE[p.id]) return BASE[p.id];
+  const W = 600, H = 750, r = rng(seedOf(p.id)), h = p.hue;
+  const raw = document.createElement('canvas'); raw.width = W; raw.height = H;
+  const g = raw.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, `hsl(${h} 45% 30%)`); bg.addColorStop(0.55, `hsl(${(h + 25) % 360} 40% 17%)`); bg.addColorStop(1, `hsl(${(h + 40) % 360} 35% 8%)`);
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  const lights = ['hsl(36 100% 64%)', `hsl(${(h + 330) % 360} 90% 70%)`, `hsl(${(h + 170) % 360} 75% 68%)`, 'hsl(48 100% 82%)'];
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 28; i++) {
+    const x = r() * W, y = r() * H * 0.72, rad = 12 + r() * 60, col = lights[Math.floor(r() * lights.length)];
+    g.globalAlpha = 0.1 + r() * 0.3;
+    g.fillStyle = col; g.beginPath(); g.arc(x, y, rad, 0, Math.PI * 2); g.fill();
+    g.lineWidth = 3; g.strokeStyle = col; g.stroke();
+  }
+  g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+  // a backlit figure: shoulders, head and hair as one dark shape with a glowing rim
+  const cx = W * (0.44 + r() * 0.12), hy = H * (0.39 + r() * 0.04), hr = W * (0.12 + r() * 0.02), style = Math.floor(r() * 3);
+  const rim = r() < 0.5 ? 'hsla(36,100%,70%,0.95)' : `hsla(${(h + 330) % 360},95%,78%,0.95)`;
+  g.beginPath();
+  g.moveTo(cx - W * 0.46, H + 20);
+  g.quadraticCurveTo(cx - W * 0.42, H * 0.75, cx - W * 0.17, H * 0.69);
+  g.quadraticCurveTo(cx - W * 0.065, H * 0.655, cx - W * 0.05, hy + hr);
+  g.lineTo(cx + W * 0.05, hy + hr);
+  g.quadraticCurveTo(cx + W * 0.065, H * 0.655, cx + W * 0.17, H * 0.69);
+  g.quadraticCurveTo(cx + W * 0.42, H * 0.75, cx + W * 0.46, H + 20);
+  g.closePath();
+  g.moveTo(cx + hr, hy); g.ellipse(cx, hy, hr, hr * 1.22, 0, 0, Math.PI * 2);
+  if (style === 0) { g.moveTo(cx + hr * 1.1, hy - hr * 0.25); g.ellipse(cx, hy - hr * 0.25, hr * 1.1, hr * 1.12, 0, 0, Math.PI * 2); }
+  if (style === 1) { g.moveTo(cx + hr * 1.3, hy + hr * 0.45); g.ellipse(cx, hy + hr * 0.45, hr * 1.3, hr * 1.75, 0, 0, Math.PI * 2); }
+  if (style === 2) { g.moveTo(cx + hr * 0.55, hy - hr * 1.3); g.arc(cx, hy - hr * 1.3, hr * 0.55, 0, Math.PI * 2); }
+  const side = r() < 0.5 ? -1 : 1;
+  const body = g.createLinearGradient(cx - side * W * 0.35, 0, cx + side * W * 0.35, 0);
+  body.addColorStop(0, `hsl(${h} 22% 9%)`); body.addColorStop(1, `hsl(${(h + 20) % 360} 26% 21%)`);
+  g.save();
+  g.shadowColor = rim; g.shadowBlur = 54; g.shadowOffsetX = side * 10;
+  g.fillStyle = body;
+  g.fill();
+  g.restore();
+  // light falling on the lit side of the face and shoulder, so it reads as a person, not a cut-out
+  g.save();
+  g.clip();
+  const lx = cx + side * hr * 1.1;
+  const face = g.createRadialGradient(lx, hy - hr * 0.1, hr * 0.1, lx, hy, hr * 2.2);
+  face.addColorStop(0, rim.replace(/[\d.]+\)$/, '0.55)')); face.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = face; g.fillRect(0, 0, W, H);
+  const sx = cx + side * W * 0.26;
+  const shoulder = g.createRadialGradient(sx, H * 0.78, 10, sx, H * 0.78, W * 0.42);
+  shoulder.addColorStop(0, rim.replace(/[\d.]+\)$/, '0.3)')); shoulder.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = shoulder; g.fillRect(0, 0, W, H);
+  g.restore();
+  // soften it like an out-of-focus flash photo, then add falloff and film grain
+  const out = document.createElement('canvas'); out.width = W; out.height = H;
+  const o = out.getContext('2d');
+  if (typeof o.filter === 'string') { o.filter = 'blur(7px)'; o.drawImage(raw, -14, -14, W + 28, H + 28); o.filter = 'none'; }
+  else {
+    const s = document.createElement('canvas'); s.width = Math.round(W / 6); s.height = Math.round(H / 6);
+    const sc = s.getContext('2d'); sc.imageSmoothingQuality = 'high'; sc.drawImage(raw, 0, 0, s.width, s.height);
+    o.imageSmoothingQuality = 'high'; o.drawImage(s, 0, 0, W, H);
+  }
+  const vg = o.createRadialGradient(W / 2, H * 0.42, W * 0.15, W / 2, H * 0.5, W * 0.9);
+  vg.addColorStop(0, 'rgba(255,255,255,0.07)'); vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+  o.fillStyle = vg; o.fillRect(0, 0, W, H);
+  grain(o, W, H, r);
+  return BASE[p.id] = out;
+}
+function stampedPortrait(p, ts){
+  const key = `${p.id}:${Math.floor(ts / 60000)}`;
+  if (STAMPED[key]) return STAMPED[key];
+  const b = basePortrait(p), c = document.createElement('canvas'); c.width = b.width; c.height = b.height;
+  const g = c.getContext('2d'); g.drawImage(b, 0, 0); drawStamp(g, ts, c.width, c.height);
+  return STAMPED[key] = c.toDataURL('image/jpeg', 0.86);
+}
+const T0 = Date.now();
+const portraitSrc = p => stampedPortrait(p, T0 - p.days * DAY - p.hue * 61000);
+function avatarSrc(p){
+  if (AVATARS[p.id]) return AVATARS[p.id];
+  const b = basePortrait(p), c = document.createElement('canvas'); c.width = c.height = 160;
+  c.getContext('2d').drawImage(b, b.width * 0.15, b.height * 0.12, b.width * 0.7, b.width * 0.7, 0, 0, 160, 160);
+  return AVATARS[p.id] = c.toDataURL('image/jpeg', 0.85);
+}
+
+/* ---------- state ---------- */
+const KEY = 'offhand.v2', LIVE_KEY = 'offhand.live';
+const fresh = () => ({ me:null, seen:[], liked:{}, passed:{}, blocked:{}, matches:[], chats:{} });
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); return true; }
+  catch (e) { toast("Couldn't save on this device. Storage is full or blocked."); return false; }
+}
+// A question in progress is written down as it happens, so closing or reloading can't restart it.
+function loadLive(){ try { return JSON.parse(localStorage.getItem(LIVE_KEY)); } catch (e) { return null; } }
+function saveLive(v){ try { localStorage.setItem(LIVE_KEY, JSON.stringify(v)); } catch (e) {} }
+function clearLive(){ try { localStorage.removeItem(LIVE_KEY); } catch (e) {} }
+
+let S = load() || fresh();
+if (!Array.isArray(S.seen)) S.seen = [];
+let view = 'welcome', lastView = '';
+let Q = null;          // the question on screen
+let P = null;          // photo being taken
+let V = null;          // voice note being recorded in chat
+let chatId = null, matchId = null, sheet = null, resetArmed = false;
+let draft = null;      // unsent chat text: {id, text}
+let voiceStarting = false;
+
+const fits = p => !S.me || S.me.show === 'everyone' || (S.me.show === 'women' ? p.g === 'woman' : p.g === 'man');
+const norm = a => ({ q:a.q, text:a.a, secs:a.secs, limit:45, mode:'text', left:!!a.left, timedOut:!!a.timedOut,
+  twist: a.tw ? { q:a.tw.q, text:a.tw.a, secs:a.tw.secs, limit:15, timedOut:!!a.tw.timedOut } : null });
+const preview = m => m.text || ({ photo:'Right-now photo', voice:'Right-now voice note', ask:'Asked for a right-now check-in' }[m.kind] || '');
+// One new profile photo a week, so a new photo can't be used as a retake.
+function photoWait(){ return S.me && S.me.photo && Date.now() < S.me.photoAt + WEEK ? fmtDay(S.me.photoAt + WEEK) : ''; }
+
+/* ---------- dealing questions ---------- */
+function moment(){
+  const d = new Date(), h = d.getHours();
+  const part = h < 5 ? 'night' : h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 22 ? 'evening' : 'night';
+  return { day:DAYS[d.getDay()], part, when: part === 'night' ? 'tonight' : `this ${part}` };
+}
+const textOf = it => typeof it.q === 'function' ? it.q(moment()) : it.q;
+// A question you haven't had before, from one family if possible.
+function draw(fam, also = []){
+  const used = new Set([...S.seen, ...also]);
+  let list = POOL.filter(it => it.fam === fam && !used.has(it.id));
+  if (!list.length) list = POOL.filter(it => !used.has(it.id));
+  return pick(list.length ? list : POOL);
+}
+function markSeen(id){ if (!S.seen.includes(id)) S.seen.push(id); }
+// Three questions from three different families, always including one about right now.
+function planOnboarding(mode){
+  const a = Math.random() < 0.5 ? 'A' : 'E';
+  const b = pick(['A', 'E', 'C'].filter(f => f !== a));
+  const ids = [];
+  for (const fam of ['D', a, b]) ids.push(draw(fam, ids).id);
+  shuffle(ids);
+  ids.forEach(markSeen);
+  return { ids, twistAt: Math.floor(Math.random() * ids.length), mode };
+}
+
+/* ---------- no-paste guard ---------- */
+function guard(el, onTry){
+  let prev = el.value;
+  const deny = e => { e.preventDefault(); if (onTry) onTry(); toast('Pasting is off. Type it yourself.'); };
+  el.addEventListener('paste', deny);
+  el.addEventListener('drop', deny);
+  el.addEventListener('dragover', e => e.preventDefault());
+  el.addEventListener('contextmenu', e => e.preventDefault());
+  el.addEventListener('beforeinput', e => { if (/^insertFrom(Paste|Drop|Yank)/.test(e.inputType || '')) deny(e); });
+  el.addEventListener('input', e => {
+    // A big jump in one event means text was injected rather than typed.
+    if (el.value.length - prev.length > 30 && !e.isComposing) {
+      el.value = prev;
+      if (onTry) onTry();
+      toast('That arrived all at once. Type it yourself.');
+    }
+    prev = el.value;
+  });
+}
+
+/* ---------- shared pieces ---------- */
+function emptyText(part, cut){
+  return cut ? 'Left mid-answer, so nothing was kept.'
+    : part.timedOut ? 'No answer before the clock ran out.' : 'Locked without an answer.';
+}
+function answerCard(a, extraHtml = ''){
+  const chips = [
+    `<span class="chip tc">${fmtClock(a.secs)} / ${fmtClock(a.limit)}</span>`,
+    `<span class="chip">${a.mode === 'voice' ? 'Spoken, one take' : 'Typed live'}</span>`
+  ];
+  if (a.timedOut) chips.push('<span class="chip">Clock ran out</span>');
+  if (a.left) chips.push('<span class="chip warn">Left the app while answering</span>');
+  const body = a.audio ? `<audio controls src="${a.audio}"></audio>`
+    : a.text ? `<p class="atext">${esc(a.text)}</p>`
+    : `<p class="atext none">${emptyText(a, a.cut)}</p>`;
+  const t = a.twist;
+  const tw = t ? `<div class="twist"><p class="eyebrow hot">${I('spark', 14)}Surprise follow-up</p><p class="aq">${esc(t.q)}</p>${
+      a.audio ? '<p class="atext none">Answered in the same recording.</p>'
+      : t.text ? `<p class="atext">${esc(t.text)}</p>`
+      : `<p class="atext none">${emptyText(t, a.cut)}</p>`
+    }<div class="meta"><span class="chip tc">${fmtClock(t.secs)} / ${fmtClock(t.limit)}</span>${t.timedOut ? '<span class="chip">Clock ran out</span>' : ''}</div></div>` : '';
+  return `<article class="answer"><p class="aq">${esc(a.q)}</p>${body}<div class="meta">${chips.join('')}</div>${tw}${extraHtml}</article>`;
+}
+const avatar = p => `<span class="av"><img src="${avatarSrc(p)}" alt=""></span>`;
+const stepHead = n => `<div class="stephead"><div class="steps">${[1, 2, 3].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</div><p class="eyebrow">Step ${n} of 3</p></div>`;
+function tabbar(){
+  const waiting = S.matches.filter(id => !S.chats[id] && !S.blocked[id]).length;
+  const tab = (id, label, icon, extra = '') => `<button data-act="go" data-to="${id}" ${view === id ? 'aria-current="page"' : ''}><span class="tb">${I(icon)}</span>${label}${extra}</button>`;
+  return `<nav class="tabbar" aria-label="Main">${tab('discover', 'Discover', 'cards')}${tab('matches', 'Matches', 'chat', waiting ? `<span class="n">${waiting}</span>` : '')}${tab('me', 'Me', 'user')}</nav>`;
+}
+function sheetHtml(){
+  const p = person(sheet.id);
+  if (sheet.type === 'now') {
+    const c = S.chats[sheet.id], asked = c.askedAt && Date.now() - c.askedAt < DAY;
+    return `<div class="scrim" data-act="closeSheet"></div>
+    <div class="sheet" role="dialog" aria-label="Right-now check-in">
+      <span class="grab"></span>
+      <h3>Right now</h3>
+      <p class="fine">A quick live check-in before you meet. One take, sent as it is. Nobody has to send one.</p>
+      <div class="opts">
+        <button class="opt" data-act="nowPhoto"><span class="oi">${I('camera')}</span><span><b>Send a right-now photo</b><small>One shot, date-stamped, sent instantly</small></span></button>
+        ${canVoice ? `<button class="opt" data-act="nowVoice"><span class="oi">${I('mic')}</span><span><b>Send a 10-second voice note</b><small>One take, sends when you stop</small></span></button>` : ''}
+        ${sheet.reply ? '' : `<button class="opt" data-act="nowAsk" ${asked ? 'disabled' : ''}><span class="oi">${I('clock')}</span><span><b>${asked ? `You asked ${esc(p.name)} today` : `Ask ${esc(p.name)} for one`}</b><small>Once a day. They can say no.</small></span></button>`}
+      </div>
+      <button class="btn ghost" data-act="closeSheet">Cancel</button>
+    </div>`;
+  }
+  if (sheet.type === 'voice') return `<div class="scrim"></div>
+    <div class="sheet" role="dialog" aria-label="Recording a voice note">
+      <span class="grab"></span>
+      <div class="recline"><span class="live"><i class="dot blink"></i>Recording</span><span class="timecode" id="vsecs">0:10</span></div>
+      <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="fine">One take, up to 10 seconds. It sends when you stop or when the clock ends.</p>
+      <button class="btn rec" data-act="noteSend">Stop and send</button>
+    </div>`;
+  const reasons = ["Photo doesn't look live", 'Answers seem scripted or AI-written', 'Rude or unsafe behaviour', 'Something else'];
+  return `<div class="scrim" data-act="closeSheet"></div>
+  <div class="sheet" role="dialog" aria-label="Report or block">
+    <span class="grab"></span>
+    <h3>Report or block ${esc(p.name)}</h3>
+    <p class="fine">Reporting also blocks. You won't see each other again.</p>
+    <div class="opts">
+      ${reasons.map(r => `<button class="opt" data-act="doReport"><span class="oi">${I('flag', 20)}</span><span><b>${esc(r)}</b></span></button>`).join('')}
+      <button class="opt" data-act="doBlock"><span class="oi">${I('x', 20)}</span><span><b>Just block, no report</b></span></button>
+    </div>
+    <button class="btn ghost" data-act="closeSheet">Cancel</button>
+  </div>`;
+}
+
+/* ---------- views ---------- */
+const VIEWS = {
+  welcome(){
+    const maya = person('maya'), a = maya.answers[0];
+    return `<section class="screen">
+      <header class="topline"><span class="wordmark"><i class="dot blink"></i>offhand</span><span class="eyebrow">Prototype</span></header>
+      <div class="hero-art" aria-hidden="true">
+        <figure class="shot"><img src="${portraitSrc(maya)}" alt=""></figure>
+        <span class="rectag"><i class="dot blink"></i>REC 0:31</span>
+        <div class="bubble">
+          <p class="bq">${esc(a.q)}</p>
+          <p class="ba">${esc(a.a)}</p>
+          <div class="meta"><span class="chip tc">0:31 / 0:45</span><span class="chip">Typed live</span></div>
+        </div>
+      </div>
+      <h1 class="mega">One take.<br>No edits.<br><em>Actually you.</em></h1>
+      <p class="lede">Matchmaking where nothing is prepared in advance.</p>
+      <button class="btn light" data-act="go" data-to="basics">Make my profile</button>
+      <ul class="rules">
+        <li><span class="ico">${I('camera')}</span><div><b>Live photos only</b><span>One shot, date-stamped. No uploads, no filters, no retakes.</span></div></li>
+        <li><span class="ico">${I('shuffle')}</span><div><b>Random questions</b><span>You'll never get one you've seen someone else answer.</span></div></li>
+        <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>Each question stays hidden until its clock starts.</span></div></li>
+        <li><span class="ico">${I('type')}</span><div><b>Your own words</b><span>Typed or spoken by you. Pasting is off everywhere.</span></div></li>
+      </ul>
+      <p class="fine">This is a prototype. Nothing you enter leaves this browser, and the other profiles are examples.</p>
+    </section>`;
+  },
+
+  basics(){
+    const m = S.me || {};
+    const chip = (name, val, label, cur) => `<label><input type="radio" name="${name}" value="${val}" ${cur === val ? 'checked' : ''}><span>${label}</span></label>`;
+    return `<section class="screen">
+      ${stepHead(1)}
+      <div class="intro"><h2>The basics</h2><p class="lede">The only part you fill in at your own pace.</p></div>
+      <div class="form">
+        <label class="field"><span>First name</span><input class="input" id="f-name" maxlength="24" autocomplete="given-name" value="${esc(m.name || '')}"></label>
+        <div class="two">
+          <label class="field"><span>Age</span><input class="input" id="f-age" type="number" inputmode="numeric" min="18" max="99" value="${m.age || ''}"></label>
+          <label class="field"><span>City</span><input class="input" id="f-city" maxlength="40" autocomplete="address-level2" value="${esc(m.city || '')}"></label>
+        </div>
+        <fieldset class="field"><legend>I am</legend><div class="seg">
+          ${chip('iam','woman','A woman',m.iam)}${chip('iam','man','A man',m.iam)}${chip('iam','nonbinary','Non-binary',m.iam)}
+        </div></fieldset>
+        <fieldset class="field"><legend>Show me</legend><div class="seg">
+          ${chip('show','women','Women',m.show)}${chip('show','men','Men',m.show)}${chip('show','everyone','Everyone',m.show)}
+        </div></fieldset>
+      </div>
+      <p class="err" id="ferr" role="alert"></p>
+      <button class="btn primary push" data-act="saveBasics">Next: live photo</button>
+    </section>`;
+  },
+
+  photo(){
+    const first = P.from === 'onboard', chat = P.from === 'chat', back = chat ? 'chat' : 'me';
+    const them = chat ? esc(person(chatId).name) : '';
+    const top = first ? stepHead(2)
+      : `<div class="topline"><button class="iconbtn" data-act="go" data-to="${back}" aria-label="Cancel">${I('x')}</button><span class="eyebrow">${chat ? 'Right-now check-in' : 'New live photo'}</span><span style="width:44px"></span></div>`;
+    if (P.shot) return `<section class="screen">
+      ${top}
+      <div class="intro"><h2>${first ? "That's your photo" : "That's your new photo"}</h2><p class="lede">It's locked in, with the date and time burned into it.</p></div>
+      <div class="cam"><img src="${P.shot}" alt="Your live photo, date-stamped"></div>
+      <button class="btn light push" data-act="photoNext">${first ? 'Next: questions' : 'Back to my profile'}</button>
+    </section>`;
+    return `<section class="screen">
+      ${top}
+      <div class="intro"><h2>${chat ? 'Take a photo right now' : 'Take your photo now'}</h2>
+        <p class="lede">${chat ? `One shot. It goes to ${them} the moment you take it, stamped with the date and time.` : "One shot, no uploads, no retakes. It's stamped with today's date and time."}</p></div>
+      <div class="cam">
+        <video id="vid" autoplay playsinline muted></video>
+        <span class="tag"><i class="dot blink"></i>Live</span>
+        ${P.error ? `<div class="camerr"><p><b>The camera isn't available here.</b>Open this page in Chrome, Edge or Safari and allow the camera when asked.${first ? ' Or carry on without a photo for now.' : ''}</p></div>` : ''}
+      </div>
+      ${P.error
+        ? `<div class="stack push"><button class="btn light" data-act="camRetry">Try the camera again</button>${first ? '<button class="btn ghost-night" data-act="skipPhoto">Continue without a photo</button>' : ''}</div>`
+        : `<div class="shutterwrap push"><button class="shutter ${chat ? 'send' : ''}" id="snap" data-act="snap" disabled aria-label="${chat ? 'Take and send' : 'Take photo'}"></button><span class="hint">${chat ? 'Take and send' : 'Take photo'}</span></div>`}
+    </section>`;
+  },
+
+  qintro(){
+    return `<section class="screen">
+      ${stepHead(3)}
+      <div class="intro"><h2>Three random questions, answered on the spot</h2></div>
+      <ul class="rules">
+        <li><span class="ico">${I('eyeoff')}</span><div><b>You can't see them yet</b><span>Each question appears when you start its clock.</span></div></li>
+        <li><span class="ico">${I('clock')}</span><div><b>45 seconds, one take</b><span>When the clock stops, that's your answer. It can't be edited or removed.</span></div></li>
+        <li><span class="ico">${I('lock')}</span><div><b>No second tries</b><span>Pasting is off. Switching away marks your answer, and reloading locks it as it is.</span></div></li>
+        <li><span class="ico">${I('spark')}</span><div><b>Expect one twist</b><span>One of the three comes with a surprise follow-up on its own 15-second clock.</span></div></li>
+      </ul>
+      <fieldset class="field"><legend>How do you want to answer?</legend>
+        <div class="modes">
+          <label><input type="radio" name="mode" value="text" checked><span class="mc">${I('type')}<b>Type</b><small>Live typing, no pasting</small></span></label>
+          ${canVoice ? `<label><input type="radio" name="mode" value="voice"><span class="mc">${I('mic')}<b>Speak out loud</b><small>One recording per question</small></span></label>` : ''}
+        </div>
+      </fieldset>
+      <button class="btn primary push" data-act="beginQuestions">I'm ready</button>
+    </section>`;
+  },
+
+  question(){
+    if (Q.phase === 'ready') return `<section class="screen">
+      <div class="topline"><p class="eyebrow">${esc(Q.label)}</p></div>
+      <h1>The question is hidden until you start.</h1>
+      <p class="lede">${Q.limit} seconds and one take. ${Q.mode === 'voice' ? 'You answer out loud.' : 'You type your answer.'}</p>
+      <div class="recwrap">
+        <button class="recbtn" data-act="qStart" aria-label="Start the clock">Start</button>
+        <span class="hint">Starts the ${Q.limit}-second clock</span>
+      </div>
+      ${Q.ctx === 'onboard' ? '' : '<button class="btn ghost-night" data-act="qLater">Not now</button>'}
+    </section>`;
+    const tw = Q.part === 'twist';
+    if (Q.phase === 'live') return `<section class="screen">
+      <div class="qbar"><span class="live"><i class="dot blink"></i>${tw ? 'Follow-up' : 'Live'}</span><span class="timecode" id="secs" aria-label="Time left">${fmtClock(curLimit())}</span></div>
+      <div class="bar" id="barwrap"><i id="bar"></i></div>
+      <p class="eyebrow ${tw ? 'hot' : ''}">${tw ? `${I('spark', 14)}Surprise follow-up` : esc(Q.label)}</p>
+      <h2 class="qtext">${esc(tw ? Q.twistQ : Q.q)}</h2>
+      ${Q.mode === 'voice'
+        ? `<div class="voice"><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p><b>${tw ? 'Still recording.' : 'Recording.'}</b> ${tw ? 'Keep talking and answer this too.' : 'Say your answer out loud.'}</p></div>`
+        : '<textarea class="answerbox" id="ans" placeholder="Start typing. Pasting is off." autocomplete="off" autocorrect="off" spellcheck="false" maxlength="600" aria-label="Your answer"></textarea>'}
+      <p class="qmeta"><span id="chars">${Q.mode === 'voice' ? 'One take' : '0 characters'}</span><span class="flag" id="leftflag" ${Q.left ? '' : 'hidden'}>You left the app. The answer will be marked.</span></p>
+      <button class="btn light push" data-act="qLock">Lock my answer</button>
+    </section>`;
+    const r = Q.record, match = Q.ctx === 'opening' ? person(Q.matchId) : null;
+    return `<section class="screen">
+      <p class="eyebrow">${I('lock', 14)}Locked</p>
+      <h1>${(r.twist || r).timedOut ? "Time. That's your answer." : 'Answer locked.'}</h1>
+      ${Q.cut ? '<p class="lede">You left before the clock finished, so the answer was locked as it was.</p>' : ''}
+      ${answerCard(r)}
+      <p class="fine">${match ? `${esc(match.name)} sees this when the chat opens. It can't be changed.` : "It can't be edited or removed. This is how other people see it."}</p>
+      <button class="btn light push" data-act="qNext">${esc(nextLabel())}</button>
+    </section>`;
+  },
+
+  discover(){
+    const deck = PEOPLE.filter(p => fits(p) && !S.liked[p.id] && !S.passed[p.id] && !S.blocked[p.id]);
+    const head = n => `<header class="topline"><span class="wordmark"><i class="dot"></i>offhand</span><span class="chip solid tc">${n} nearby</span></header>`;
+    if (!deck.length) return `<section class="screen">${head(0)}
+      <div class="empty">${I('cards', 30)}<b>You've seen everyone nearby.</b><span>In the real app, new people show up here as they join.</span></div>
+      ${Object.keys(S.passed).length ? '<button class="btn secondary" data-act="unpass">Show the people I passed again</button>' : ''}
+    </section>`;
+    const p = deck[0];
+    return `<section class="screen">${head(deck.length)}
+      <figure class="portrait"><img src="${portraitSrc(p)}" alt="Example photo for ${esc(p.name)}"><span class="tag">Example profile</span>
+        <figcaption><b>${esc(p.name)}, ${p.age}</b><span>${p.km} km away · ${esc(S.me.city)}</span></figcaption></figure>
+      ${p.answers.map((a, i) => answerCard(norm(a), `<button class="likebtn" data-act="like" data-id="${p.id}" data-i="${i}" aria-label="Like this answer">${I('heart', 18)}Like</button>`)).join('')}
+      <div class="deckbar">
+        <button class="btn secondary" data-act="pass" data-id="${p.id}">${I('x', 20)}Pass</button>
+        <button class="iconbtn outline" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('flag', 20)}</button>
+      </div>
+    </section>`;
+  },
+
+  matched(){
+    const p = person(matchId), mine = S.me.photo;
+    return `<section class="screen">
+      <p class="eyebrow">It's mutual</p>
+      <div class="pair" aria-hidden="true">
+        <figure class="p1">${mine ? `<img src="${mine}" alt="">` : `<span class="initial">${esc(S.me.name[0])}</span>`}</figure>
+        <figure class="p2"><img src="${portraitSrc(p)}" alt=""></figure>
+        <span class="heart">${I('heart', 26)}</span>
+      </div>
+      <h1>You and ${esc(p.name)} liked each other.</h1>
+      <p class="lede">The chat opens with one random question you both answer on the spot: 30 seconds, typed, no pasting.</p>
+      <div class="stack push">
+        <button class="btn rec" data-act="opening">Start the opening question</button>
+        <button class="btn ghost-night" data-act="go" data-to="matches">Later</button>
+      </div>
+    </section>`;
+  },
+
+  matches(){
+    const ms = S.matches.filter(id => !S.blocked[id]).map(person);
+    const pending = Object.keys(S.liked).filter(id => !S.matches.includes(id) && !S.blocked[id]).map(person);
+    const row = p => {
+      const c = S.chats[p.id];
+      const last = c ? preview(c.msgs[c.msgs.length - 1]) : 'Opening question waiting';
+      return `<button class="item" data-act="openMatch" data-id="${p.id}">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span>${esc(last)}</span></span>${I('chev', 20)}</button>`;
+    };
+    return `<section class="screen">
+      <header class="topline"><h2>Matches</h2></header>
+      ${ms.length ? `<div class="list">${ms.map(row).join('')}</div>`
+        : `<div class="empty">${I('chat', 30)}<b>No matches yet.</b><span>Like an answer in Discover. If they like you back, they appear here.</span></div>`}
+      ${pending.length ? `<p class="eyebrow">Likes sent</p><div class="list">${pending.map(p => `<div class="item static">${avatar(p)}<span class="txt"><b>${esc(p.name)}, ${p.age}</b><span>Waiting to hear back</span></span></div>`).join('')}</div>` : ''}
+    </section>`;
+  },
+
+  chat(){
+    const p = person(chatId), c = S.chats[chatId];
+    return `<section class="screen chat">
+      <header class="chathead">
+        <button class="iconbtn" data-act="go" data-to="matches" aria-label="Back to matches">${I('back')}</button>
+        ${avatar(p)}
+        <span class="txt"><b>${esc(p.name)}</b><span>Example profile, scripted replies</span></span>
+        <button class="iconbtn" data-act="report" data-id="${p.id}" aria-label="Report or block">${I('more')}</button>
+      </header>
+      <div class="msgs" id="msgs">${c.msgs.map(msgHtml).join('')}</div>
+      <div class="composer">
+        <button class="nowbtn" data-act="now" aria-label="Right-now check-in"><i class="dot"></i>Now</button>
+        <textarea class="cinput" id="msg" rows="1" placeholder="Message. No pasting." maxlength="500" autocomplete="off" aria-label="Message"></textarea>
+        <button class="sendbtn" data-act="send" aria-label="Send">${I('send', 20)}</button>
+      </div>
+    </section>`;
+  },
+
+  me(){
+    const m = S.me, wait = photoWait();
+    const photoLabel = !m.photo ? 'Take your live photo' : wait ? `Next new photo on ${wait}` : 'Take a new live photo';
+    return `<section class="screen">
+      <header class="topline"><h2>Your profile</h2><span class="chip solid">As others see it</span></header>
+      ${m.photo
+        ? `<figure class="portrait"><img src="${m.photo}" alt="Your live photo, date-stamped"><figcaption><b>${esc(m.name)}, ${m.age}</b><span>${esc(m.city)}</span></figcaption></figure>`
+        : `<div class="nophoto">${I('camera', 34)}<p><b>No live photo yet</b>Others see your profile marked as having no live photo.</p></div><div class="who"><h2>${esc(m.name)}, ${m.age}</h2><p>${esc(m.city)}</p></div>`}
+      ${m.answers.map(a => answerCard(a)).join('')}
+      <div class="opts">
+        <button class="opt card" data-act="freshQ"><span class="oi">${I('shuffle')}</span><span><b>Answer a fresh question</b><small>Random, and hidden until its clock starts</small></span></button>
+        <button class="opt card" data-act="newPhoto" ${wait ? 'disabled' : ''}><span class="oi">${I('camera')}</span><span><b>${photoLabel}</b><small>${wait ? 'One new photo a week' : 'One shot, date-stamped'}</small></span></button>
+      </div>
+      <p class="fine">Answers can't be edited or removed, and you can take a new photo once a week.</p>
+      <button class="btn ghost danger" data-act="reset">${resetArmed ? 'Tap again to erase everything' : 'Reset the demo'}</button>
+    </section>`;
+  }
+};
+
+function msgHtml(m, i){
+  if (m.from === 'sys') return m.kind === 'note'
+    ? `<div class="msg sys note">${esc(m.text)}</div>`
+    : `<div class="msg sys"><span class="eyebrow">Opening question</span><b>${esc(m.text)}</b></div>`;
+  if (m.kind === 'photo') {
+    const src = m.src || stampedPortrait(person(chatId), m.at);
+    return `<div class="msg ${m.from} media"><img src="${src}" alt="Right-now photo, date-stamped"><span class="cap">Right now · ${fmtTime(m.at)}</span></div>`;
+  }
+  if (m.kind === 'voice') return `<div class="msg ${m.from} media"><audio controls src="${m.src}"></audio><span class="cap">Right now · ${fmtTime(m.at)}</span></div>`;
+  if (m.kind === 'ask') {
+    const who = `<b>${esc(person(chatId).name)} asked for a right-now check-in.</b>`;
+    if (m.state === 'open') return `<div class="msg them ask"><p>${who} A live photo or a short voice note, taken on the spot. It's up to you.</p>
+      <div class="row"><button class="btn rec small" data-act="askYes">Send one</button><button class="btn secondary small" data-act="askNo" data-i="${i}">Not now</button></div></div>`;
+    return `<div class="msg them ask"><p>${who} ${m.state === 'done' ? 'You sent one.' : 'You said not now. Nothing changes.'}</p></div>`;
+  }
+  return `<div class="msg ${m.from}">${esc(m.text)}</div>`;
+}
+
+/* ---------- render ---------- */
+const AFTER = {
+  photo(){ if (!P.shot && !P.error) startCam(); },
+  question(){
+    if (Q.phase !== 'live') return;
+    const ans = $('#ans');
+    if (!ans) return;
+    guard(ans, () => { Q.pasteTries++; persistLive(); });
+    ans.addEventListener('input', () => {
+      Q.text = ans.value;
+      $('#chars').textContent = `${ans.value.length} characters`;
+      persistLive();
+    });
+    ans.focus();
+  },
+  chat(){
+    const msg = $('#msg');
+    if (draft && draft.id === chatId) msg.value = draft.text;
+    draft = null;
+    guard(msg);
+    msg.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ACT.send(); } });
+    const box = $('#msgs'), toEnd = () => { box.scrollTop = box.scrollHeight; };
+    toEnd();
+    // photos decode after the first layout; keep the newest message in view once they do
+    box.querySelectorAll('img').forEach(img => { if (!img.complete) img.addEventListener('load', toEnd, { once:true }); });
+  }
+};
+const themeColor = document.querySelector('meta[name="theme-color"]');
+
+function render(){
+  if (view !== 'photo') stopCam();
+  const tabs = TABS.includes(view), tone = NIGHT.includes(view) ? 'night' : 'day';
+  app.innerHTML = VIEWS[view]() + (tabs ? tabbar() : '') + (sheet ? sheetHtml() : '');
+  app.dataset.view = view; app.dataset.tone = tone; document.body.dataset.tone = tone;
+  if (tabs) app.dataset.tabs = '1'; else delete app.dataset.tabs;
+  const screen = app.querySelector('.screen');
+  if (screen && view !== lastView) screen.classList.add('enter');
+  lastView = view;
+  themeColor.content = getComputedStyle(document.documentElement).getPropertyValue(tone === 'night' ? '--night' : '--paper').trim();
+  if (AFTER[view]) AFTER[view]();
+  if (view !== 'chat') window.scrollTo(0, 0);
+}
+function keepDraft(){ const b = $('#msg'); if (b && chatId) draft = { id:chatId, text:b.value }; }
+function go(to){
+  if (V) endNote(true);
+  if (view === 'chat') keepDraft();
+  view = to; sheet = null;
+  if (to !== 'me') resetArmed = false;
+  render();
+}
+// Re-render without losing a half-typed chat message.
+function redraw(){
+  const box = $('#msg'), typing = !!box && document.activeElement === box;
+  keepDraft();
+  render();
+  const next = $('#msg');
+  if (typing && next && !sheet) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+}
+
+/* ---------- camera ---------- */
+async function startCam(){
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('no camera API');
+    const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:960} }, audio:false });
+    const v = $('#vid');
+    if (view !== 'photo' || !v || !P) { stream.getTracks().forEach(t => t.stop()); return; }
+    P.stream = stream;
+    v.srcObject = stream;
+    v.addEventListener('loadedmetadata', () => { const b = $('#snap'); if (b) b.disabled = false; }, { once:true });
+  } catch (e) {
+    if (view === 'photo' && P) { P.error = true; render(); }
+  }
+}
+function stopCam(){
+  if (P && P.stream) { P.stream.getTracks().forEach(t => t.stop()); P.stream = null; }
+}
+// One shot. The photo is kept (or sent) the moment it's taken.
+function snap(){
+  const v = $('#vid');
+  if (!P || P.shot || !v || !v.videoWidth) return;
+  const chat = P.from === 'chat';
+  const W = chat ? 540 : 720, H = chat ? 675 : 900, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  const scale = Math.max(W / v.videoWidth, H / v.videoHeight);
+  const sw = W / scale, sh = H / scale;
+  ctx.save(); ctx.translate(W, 0); ctx.scale(-1, 1);   // mirror, like the preview
+  ctx.drawImage(v, (v.videoWidth - sw) / 2, (v.videoHeight - sh) / 2, sw, sh, 0, 0, W, H);
+  ctx.restore();
+  const at = Date.now();
+  drawStamp(ctx, at, W, H);   // burned into the pixels, so it travels with the photo
+  const shot = c.toDataURL('image/jpeg', chat ? 0.72 : 0.82);
+  stopCam();
+  if (chat) {
+    const id = chatId;
+    P = null;
+    if (sendNow(id, { from:'me', kind:'photo', src:shot, at })) toast(`Sent to ${person(id).name}.`);
+    go('chat');
+    return;
+  }
+  S.me.photo = shot; S.me.photoAt = at;
+  if (P.from === 'onboard') S.me.photoDone = true;
+  save();
+  P.shot = shot;
+  render();
+}
+
+/* ---------- audio ---------- */
+// One-take recorder, shared by spoken answers and chat voice notes.
+async function recStart(){
+  const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+  try {
+    const r = { stream, chunks:[], rec:new MediaRecorder(stream, { audioBitsPerSecond:24000 }) };
+    r.rec.ondataavailable = e => { if (e.data.size) r.chunks.push(e.data); };
+    r.rec.start();
+    return r;
+  } catch (e) {
+    stream.getTracks().forEach(t => t.stop());
+    throw e;
+  }
+}
+function recStop(r){
+  return new Promise(resolve => {
+    r.rec.onstop = () => {
+      const blob = new Blob(r.chunks, { type: r.rec.mimeType || 'audio/webm' });
+      r.stream.getTracks().forEach(t => t.stop());
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = () => resolve('');
+      fr.readAsDataURL(blob);
+    };
+    r.rec.stop();
+  });
+}
+
+/* ---------- questions ---------- */
+function askQuestion(opts){
+  Q = Object.assign({ phase:'ready', part:'main', q:'', twistQ:'', limit:45, twistLimit:15, mode:'text', left:false, pasteTries:0, text:'', busy:false }, opts);
+  view = 'question'; render();
+}
+function curLimit(){ return Q.part === 'twist' ? Q.twistLimit : Q.limit; }
+function persistLive(){
+  if (!Q || Q.phase !== 'live') return;
+  saveLive({ ctx:Q.ctx, matchId:Q.matchId || null, openIdx: Q.openIdx == null ? null : Q.openIdx, q:Q.q, twistQ:Q.twistQ,
+    mode:Q.mode, limit:Q.limit, twistLimit:Q.twistLimit, part:Q.part, start:Q.start, main:Q.main || null,
+    text:Q.text, left:Q.left, pasteTries:Q.pasteTries });
+}
+async function qStart(){
+  if (!Q || Q.phase !== 'ready' || Q.busy) return;
+  Q.busy = true;
+  if (Q.itemId) {
+    const it = BY_ID.get(Q.itemId) || draw('E');
+    Q.q = textOf(it);
+    if (Q.withTwist) Q.twistQ = pick(it.f);
+  }
+  if (Q.mode === 'voice') {
+    try { Q.vr = await recStart(); }
+    catch (e) { Q.mode = 'text'; toast("The microphone isn't available. Type this one instead."); }
+  }
+  Q.phase = 'live'; Q.part = 'main'; Q.start = Date.now(); Q.text = ''; Q.busy = false;
+  persistLive();
+  render();
+  Q.timer = setInterval(tick, 100);
+}
+function tick(){
+  if (!Q || Q.phase !== 'live') return;
+  const lim = curLimit(), left = Math.max(0, lim - (Date.now() - Q.start) / 1000);
+  const secs = $('#secs'), bar = $('#bar');
+  if (secs) {
+    secs.textContent = fmtClock(Math.ceil(left));
+    const low = left <= 10;
+    secs.classList.toggle('low', low);
+    $('#barwrap').classList.toggle('low', low);
+    bar.style.transform = `scaleX(${left / lim})`;
+  }
+  if (left <= 0) finishQuestion(true);
+}
+async function finishQuestion(timedOut){
+  if (!Q || Q.phase !== 'live' || Q.busy) return;
+  Q.busy = true;
+  clearInterval(Q.timer);
+  const lim = curLimit();
+  const used = Math.min(lim, Math.max(1, Math.round((Date.now() - Q.start) / 1000)));
+  const ans = $('#ans');
+  const part = { text: ans ? ans.value.trim() : '', secs:used, limit:lim, timedOut:!!timedOut };
+  if (Q.part === 'main' && Q.twistQ) {
+    // Straight into the follow-up: no pause, and a spoken answer keeps recording.
+    Q.main = part; Q.part = 'twist'; Q.start = Date.now(); Q.text = ''; Q.busy = false;
+    persistLive();
+    render();
+    Q.timer = setInterval(tick, 100);
+    return;
+  }
+  const main = Q.part === 'twist' ? Q.main : part, follow = Q.part === 'twist' ? part : null;
+  const audio = Q.mode === 'voice' && Q.vr ? await recStop(Q.vr) : '';
+  const rec = { q:Q.q, mode:Q.mode, text:main.text, audio, secs:main.secs, limit:main.limit, timedOut:main.timedOut,
+    left:Q.left, pasteTries:Q.pasteTries, at:Date.now(),
+    twist: follow ? { q:Q.twistQ, text:follow.text, secs:follow.secs, limit:follow.limit, timedOut:follow.timedOut } : null };
+  commit(Q.ctx, Q.matchId, Q.openIdx, rec);
+  clearLive();
+  Q.record = rec; Q.phase = 'locked';
+  render();
+}
+// Store an answer the moment it locks, so there is nothing to go back to.
+function commit(ctx, id, openIdx, rec){
+  if (ctx === 'onboard' && S.me) {
+    S.me.answers.push(rec);
+    if (S.me.plan && S.me.answers.length >= S.me.plan.ids.length) S.me.ready = true;
+  } else if (ctx === 'fresh' && S.me) {
+    S.me.answers.unshift(rec);
+  } else if (ctx === 'opening' && person(id)) {
+    const p = person(id), o = p.openers[openIdx] || p.openers[0];
+    S.chats[id] = { ri:0, msgs:[
+      { from:'sys', text:rec.q },
+      { from:'me', text: rec.text || (rec.cut ? '(left before answering)' : rec.timedOut ? '(no answer before the clock ran out)' : '(no answer)') },
+      { from:'them', text:o.a }
+    ]};
+  }
+  save();
+}
+// The page was closed or reloaded mid-answer: lock whatever was there.
+function finalizePending(L){
+  const now = Date.now(), el = Math.max(0, (now - L.start) / 1000);
+  const lim = L.part === 'twist' ? L.twistLimit : L.limit;
+  const part = { text:(L.text || '').trim(), secs:Math.min(lim, Math.max(1, Math.round(el))), limit:lim, timedOut: el >= lim };
+  const inTwist = L.part === 'twist' && L.main;
+  const main = inTwist ? L.main : part, follow = inTwist ? part : null;
+  const rec = { q:L.q, mode:L.mode, text:main.text, audio:'', secs:main.secs, limit:main.limit, timedOut:main.timedOut,
+    left:true, cut:true, pasteTries:L.pasteTries || 0, at:now,
+    twist: follow ? { q:L.twistQ, text:follow.text, secs:follow.secs, limit:follow.limit, timedOut:follow.timedOut } : null };
+  commit(L.ctx, L.matchId, L.openIdx, rec);
+  clearLive();
+  return rec;
+}
+function nextOnboardQuestion(){
+  const plan = S.me.plan, i = S.me.answers.length;
+  askQuestion({ ctx:'onboard', itemId:plan.ids[i], withTwist: i === plan.twistAt, mode:plan.mode, limit:45,
+    label:`Question ${i + 1} of ${plan.ids.length}` });
+}
+function nextLabel(){
+  if (Q.ctx === 'onboard') return S.me.ready ? 'See who is nearby' : `Go to question ${S.me.answers.length + 1}`;
+  if (Q.ctx === 'fresh') return 'Back to my profile';
+  return 'Open the chat';
+}
+function onLeave(){
+  if (Q && Q.phase === 'live' && !Q.left) {
+    Q.left = true;
+    persistLive();
+    const f = $('#leftflag'); if (f) f.hidden = false;
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) onLeave(); });
+window.addEventListener('blur', onLeave);
+
+/* ---------- chat ---------- */
+function scriptedReply(id){
+  const c = S.chats[id], p = person(id);
+  if (!c || !p.replies || c.ri >= p.replies.length) return;
+  setTimeout(() => {
+    if (!S.chats[id] || S.blocked[id]) return;
+    const m = { from:'them', text:p.replies[c.ri++] };
+    c.msgs.push(m);
+    // After their second reply, the match asks for a check-in once. It can be declined.
+    const ask = c.ri === 2 && !c.msgs.some(x => x.kind === 'ask');
+    if (ask) c.msgs.push({ from:'them', kind:'ask', state:'open' });
+    save();
+    if (view === 'chat' && chatId === id) {
+      if (ask) { redraw(); return; }
+      const box = $('#msgs');
+      box.insertAdjacentHTML('beforeend', msgHtml(m));
+      box.scrollTop = box.scrollHeight;
+    }
+  }, 1500);
+}
+// Add a right-now photo or voice note to a chat. Any open request counts as answered.
+function sendNow(id, m){
+  const c = S.chats[id];
+  const open = c.msgs.filter(x => x.kind === 'ask' && x.state === 'open');
+  c.msgs.push(m); open.forEach(x => { x.state = 'done'; });
+  if (save()) return true;
+  c.msgs.pop(); open.forEach(x => { x.state = 'open'; });
+  return false;
+}
+async function endNote(send){
+  if (!V || V.ending) return;
+  V.ending = true;
+  clearInterval(V.timer);
+  const v = V, src = await recStop(v);
+  V = null;
+  if (sheet && sheet.type === 'voice') sheet = null;
+  if (send && src && S.chats[v.id]) sendNow(v.id, { from:'me', kind:'voice', src, at:Date.now() });
+  if (view === 'chat') redraw();
+}
+
+/* ---------- actions ---------- */
+const ACT = {
+  go(t){ go(t.dataset.to); },
+
+  saveBasics(){
+    const name = $('#f-name').value.trim(), age = Number($('#f-age').value), city = $('#f-city').value.trim();
+    const iam = ($('input[name=iam]:checked') || {}).value, show = ($('input[name=show]:checked') || {}).value;
+    const err = !name || name.length < 2 ? 'Add your first name.'
+      : !Number.isInteger(age) || age < 18 ? 'You need to be 18 or older to use Offhand.'
+      : age > 99 ? 'Check your age.'
+      : !city ? 'Add your city.'
+      : !iam || !show ? 'Choose an option for "I am" and "Show me".' : '';
+    if (err) { $('#ferr').textContent = err; return; }
+    S.me = { name, age, city, iam, show, answers:[], photo:'', photoAt:0, photoDone:false, plan:null, ready:false };
+    save();
+    P = { from:'onboard', shot:'', error:false, stream:null };
+    go('photo');
+  },
+
+  snap(){ snap(); },
+  camRetry(){ P.error = false; render(); },
+  photoNext(){ const from = P.from; P = null; go(from === 'onboard' ? 'qintro' : 'me'); },
+  skipPhoto(){ S.me.photoDone = true; save(); P = null; go('qintro'); },
+  newPhoto(){
+    if (photoWait()) return;
+    P = { from:'me', shot:'', error:false, stream:null };
+    go('photo');
+  },
+
+  beginQuestions(){
+    const mode = ($('input[name=mode]:checked') || {}).value || 'text';
+    S.me.plan = planOnboarding(mode);
+    save();
+    nextOnboardQuestion();
+  },
+  qStart(){ qStart(); },
+  qLock(){ finishQuestion(false); },
+  qNext(){
+    const ctx = Q.ctx, id = Q.matchId;
+    Q = null;
+    if (ctx === 'onboard') { if (S.me.ready) go('discover'); else nextOnboardQuestion(); }
+    else if (ctx === 'fresh') go('me');
+    else { chatId = id; go('chat'); }
+  },
+  qLater(){ const ctx = Q.ctx; Q = null; go(ctx === 'fresh' ? 'me' : 'matches'); },
+
+  freshQ(){
+    const it = draw(pick(['A', 'A', 'D', 'E', 'E', 'C']));
+    markSeen(it.id); save();
+    askQuestion({ ctx:'fresh', itemId:it.id, withTwist: Math.random() < 0.5, mode:'text', limit:45, label:'Fresh question' });
+  },
+
+  like(t){
+    const p = person(t.dataset.id);
+    S.liked[p.id] = { i:Number(t.dataset.i), at:Date.now() };
+    if (p.back) { S.matches.unshift(p.id); save(); matchId = p.id; go('matched'); }
+    else { save(); render(); toast(`Like sent to ${p.name}.`); }
+  },
+  pass(t){ S.passed[t.dataset.id] = true; save(); render(); },
+  unpass(){ S.passed = {}; save(); render(); },
+
+  report(t){ sheet = { type:'report', id:t.dataset.id }; redraw(); },
+  closeSheet(){ sheet = null; redraw(); },
+  doReport(){ blockNow('Reported and blocked. Thank you.'); },
+  doBlock(){ blockNow('Blocked.'); },
+
+  openMatch(t){
+    const id = t.dataset.id;
+    if (S.chats[id]) { chatId = id; go('chat'); } else { matchId = id; go('matched'); }
+  },
+  opening(){
+    const p = person(matchId), idx = Math.floor(Math.random() * p.openers.length);
+    askQuestion({ ctx:'opening', matchId, openIdx:idx, q:p.openers[idx].q, mode:'text', limit:30, label:`Opening question with ${p.name}` });
+  },
+  send(){
+    const box = $('#msg'), text = box.value.trim();
+    if (!text) return;
+    const m = { from:'me', text };
+    S.chats[chatId].msgs.push(m); save();
+    const list = $('#msgs');
+    list.insertAdjacentHTML('beforeend', msgHtml(m));
+    list.scrollTop = list.scrollHeight;
+    box.value = ''; box.dispatchEvent(new Event('input'));
+    box.focus();
+    scriptedReply(chatId);
+  },
+
+  now(){ sheet = { type:'now', id:chatId }; redraw(); },
+  askYes(){ sheet = { type:'now', id:chatId, reply:true }; redraw(); },
+  askNo(t){
+    const m = S.chats[chatId].msgs[Number(t.dataset.i)];
+    if (m && m.kind === 'ask') { m.state = 'declined'; save(); }
+    redraw();
+  },
+  nowPhoto(){ P = { from:'chat', shot:'', error:false, stream:null }; go('photo'); },
+  async nowVoice(){
+    if (V || voiceStarting) return;
+    const id = chatId;
+    let r;
+    voiceStarting = true;
+    try { r = await recStart(); }
+    catch (e) { sheet = null; redraw(); toast("The microphone isn't available in this window."); return; }
+    finally { voiceStarting = false; }
+    V = Object.assign(r, { id, t0:Date.now(), ending:false });
+    sheet = { type:'voice', id }; redraw();
+    V.timer = setInterval(() => {
+      if (!V) return;
+      const left = Math.max(0, 10 - (Date.now() - V.t0) / 1000);
+      const el = $('#vsecs'); if (el) el.textContent = fmtClock(Math.ceil(left));
+      if (left <= 0) endNote(true);
+    }, 100);
+  },
+  noteSend(){ endNote(true); },
+  nowAsk(){
+    const id = chatId, c = S.chats[id], p = person(id);
+    c.askedAt = Date.now();
+    c.msgs.push({ from:'sys', kind:'note', text:`You asked ${p.name} for a right-now check-in. They can say no.` });
+    save(); sheet = null; redraw();
+    setTimeout(() => {
+      if (!S.chats[id] || S.blocked[id]) return;
+      S.chats[id].msgs.push({ from:'them', kind:'photo', src:'', at:Date.now() });
+      save();
+      if (view === 'chat' && chatId === id) redraw();
+    }, 2000);
+  },
+
+  reset(){
+    if (!resetArmed) { resetArmed = true; render(); return; }
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    clearLive();
+    S = fresh(); resetArmed = false; Q = P = null; matchId = chatId = null; draft = null;
+    go('welcome');
+  }
+};
+function blockNow(msg){
+  S.blocked[sheet.id] = true; save();
+  sheet = null;
+  go(view === 'chat' ? 'matches' : view);
+  toast(msg);
+}
+
+app.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]');
+  if (!t || t.disabled) return;
+  const fn = ACT[t.dataset.act];
+  if (fn) fn(t, e);
+});
+
+/* ---------- start ---------- */
+// Pick up exactly where this person left off. Nothing restarts.
+function resume(){
+  if (!S.me) return go('welcome');
+  if (S.me.ready) return go('discover');
+  if (!S.me.photoDone) { P = { from:'onboard', shot:'', error:false, stream:null }; return go('photo'); }
+  if (!S.me.plan) return go('qintro');
+  nextOnboardQuestion();
+}
+function boot(){
+  const L = loadLive();
+  if (L && L.start && S.me) {
+    const rec = finalizePending(L);
+    Q = { phase:'locked', ctx:L.ctx, matchId:L.matchId, record:rec, cut:true };
+    view = 'question';
+    render();
+    return;
+  }
+  if (L) clearLive();
+  resume();
+}
+boot();
+</script>
+</body>
+</html>
